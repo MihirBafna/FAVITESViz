@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css?family=Yantramanav:100');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
+
+/*------Resetting any automatic margin and padding settings------*/
+html, body{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+/*------style for entire HomePage------*/
+.HomePage{
+	height:100%;
+	width: 100%;
+	margin: auto;
+	background: url("Images/navybluenetwork.png");
+	display: table;
+	top: 0;
+	background-size: cover;
+}
+
+.HomePage .Center{
+	display: table-cell;
+	vertical-align: middle;
+	width: 100%;
+	max-width: none;
+}
+
+/*------style for HomePage content (text and buttons)------*/
+.Content{
+	max-width: 600px;
+	margin: 0 auto;
+	text-align: center;
+	padding-bottom: 15%;
+}
+
+.Content h1{
+	font-family: 'Yantramanav';
+	font-size: 500%;
+	font-weight: 100;
+	color: #FFFFFF;
+	line-height: 70%;
+}
+
+/*--------------------------------------------------------*/
+.Button{
+	font-family: 'Montserrat';
+	font-size: 100%;
+	font-weight: 400;
+	color: #FFFFFF;
+	text-transform:uppercase;
+	text-decoration: none;
+	border: solid #FFFFFF;
+	padding: 10px 15px;
+	border-radius: 9px;
+}
+
+.Button:hover{
+	color:#3A6168;
+	border: solid #3A6168;
+}
+
+
+/*------Media Queries------*/
+@media screen and (max-width: 900px) {
+	.Content{
+		padding-bottom: 15%;
+	}
+	.Content h1{
+		font-size: 450%;
+	}
+	.Button{
+		font-size: 90%;
+	}
+}
+@media screen and (max-width: 768px) {
+	.Content{
+		padding-bottom: 13%;
+	}
+	.Content h1{
+		font-size: 400%;
+	}
+	.Button{
+		font-size: 80%;
+	}
+}
+@media screen and (max-width: 480px) {
+	.Content{
+		padding-bottom: 11%;
+	}
+	.Content h1{
+		font-size: 350%;
+	}
+	.Button{
+		font-size: 80%;
+	}
+}

@@ -1,2 +1,2 @@
 # FAVITESWebsite
-FAVITES output visualization website
+FAVITES output viewing website
