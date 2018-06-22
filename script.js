@@ -61,7 +61,7 @@
   						}
   					}
   				});
-
+          // Cytoscape Layout function //
 					cy.layout({
 						name:'concentric'
 					}).run();
