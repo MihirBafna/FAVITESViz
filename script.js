@@ -1,7 +1,7 @@
-//$(function(){
-  window.onload = function() {
+window.onload = function() {
     // Reading FAVITES FILE //
-		var fileInput = document.getElementById('fileInput');
+		var contactInput = document.getElementById('contactInput');
+    var transmissionInput = document.getElementById('transmissionInput');
 		var fileDisplayArea = document.getElementById('fileDisplayArea');
     // Cytoscape initializing empty list of elements //
     var cy = cytoscape({
@@ -17,16 +17,28 @@
               'height':'30'}
         },
         {
+          selector: '.transmission_node',
+          style:
+            {'background-color': '#32defc',
+              'width':'30',
+              'height':'30'}
+        },
+        {
           selector: 'edge',
           style:
-          {'width': 0.3,
-            'background-color': '#FFFFFF',}
-        }
+          {'width': 0.3,}
+        },
+        {
+          selector: '.transmission_edge',
+          style:
+          {'width': 1,
+            'line-color': '#32defc'}
+        },
       ]
     });
-
-		fileInput.addEventListener('change', function(e) {
-			var file = fileInput.files[0];
+// Contact Network file reading and displaying //
+		contactInput.addEventListener('change', function(e) {
+			var file = contactInput.files[0];
 			var textType = /text.*/;
 			if (file.type.match(textType)) {
 				var reader = new FileReader();
@@ -37,11 +49,11 @@
             var miniArray = allLines[i].split("\t");
           // ADDING NODES //
             if (miniArray[0] === "NODE"){
-              cy.add({group: "nodes",data:{id:'NODE' + miniArray[1]}});
+              cy.add({group: "nodes",data:{id: miniArray[1]}});
             }
           // ADDING EDGES //
             else if (miniArray[0] === "EDGE"){
-              cy.add({group: "edges", data: {id: miniArray[1]+miniArray[2],source: "NODE"+miniArray[1], target: "NODE"+miniArray[2]}});
+              cy.add({group: "edges", data: {id: miniArray[1]+miniArray[2],source: miniArray[1], target: miniArray[2]}});
             }
           }
           // Qtip code for each node//
@@ -69,5 +81,46 @@
       reader.readAsText(file);
       }
     })
+
+// Transmission Network file reading and displaying //
+    transmissionInput.addEventListener('change', function(e) {
+      var file = transmissionInput.files[0];
+      var textType = /text.*/;
+      if (file.type.match(textType)) {
+        var reader = new FileReader();
+        reader.onload = function(e){
+          var allLines = reader.result.split("\n");
+          // iterating and plotting the transmission process //
+          for (i=0; i < allLines.length; i++){
+            var miniArray = allLines[i].split("\t");
+            if (miniArray[0] === "None"){
+              cy.$('#'+miniArray[1]).classes('transmission_node');
+            }
+            else{
+              cy.$('#'+miniArray[0]+miniArray[1]).classes('transmission_edge');
+              cy.$('#'+miniArray[1]).classes('transmission_node');
+              console.log('#'+miniArray[0]+miniArray[1]);
+            }
+          }
+          // Qtip code for each node //
+        /*  cy.nodes().qtip({
+            content: function(){
+              return this.id()
+            },
+            position: {
+              my: 'top center',
+              at: 'bottom center'
+            },
+            style: {
+              classes: 'qtip-bootstrap',
+              tip: {
+                width: 10,
+                height: 8
+              }
+            }
+          }); */
+        }
+      reader.readAsText(file);
+      }
+    })
   };
-//});

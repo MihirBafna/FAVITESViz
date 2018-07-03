@@ -16,6 +16,8 @@
 </head>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:300');
 body{
 	background-image: url("Images/navybluenetwork.png");
 }
@@ -31,14 +33,18 @@ body{
 
 #inputFile {
 	color: white;
+	font-family: Oxygen;
 }
 </style>
 
 
 <body>
 	<div id="cy"></div>
-	<div id="inputFile">Select a text file:
-		<input type="file" id="fileInput">
+	<div id="inputFile">Select a contact network file:
+		<input type="file" id="contactInput">
+	</div>
+	<div id="inputFile">Select a transmission network file:
+		<input type="file" id="transmissionInput">
 	</div>
 
 <!-- Cytoscape Graph Script -->
