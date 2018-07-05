@@ -41,6 +41,9 @@ window.onload = function() {
 			var file = contactInput.files[0];
 			var textType = /text.*/;
 			if (file.type.match(textType)) {
+				$(function(){
+					$('#inputFile1').fadeOut("slow");
+				});
 				var reader = new FileReader();
         reader.onload = function(e){
           var allLines = reader.result.split("\n");
@@ -87,6 +90,9 @@ window.onload = function() {
       var file = transmissionInput.files[0];
       var textType = /text.*/;
       if (file.type.match(textType)) {
+				$(function(){
+					$('#inputFile2').fadeOut("slow");
+				});
         var reader = new FileReader();
         reader.onload = function(e){
           var allLines = reader.result.split("\n");
@@ -96,21 +102,19 @@ window.onload = function() {
             if (miniArray[0] === "None"){
               cy.$('#'+miniArray[1]).classes('transmission_node');
             }
+						// checking if edge ID (Node1Node2) exists  //
+						else if(cy.$('#'+miniArray[0]+miniArray[1]).length){
+							cy.$('#'+miniArray[0]+miniArray[1]).classes('transmission_edge');
+							cy.$('#'+miniArray[1]).classes('transmission_node');
+						}
 						// checking if edge ID (Node2Node1) exists //
 						else if(cy.$('#'+miniArray[1]+miniArray[0]).length){
-							console.log(miniArray[1]+miniArray[0]);
 							cy.$('#'+miniArray[1]+miniArray[0]).classes('transmission_edge');
 							cy.$('#'+miniArray[1]).classes('transmission_node');
 						}
-						// checking if edge ID (Node1Node2) exists  //
-            else if(cy.$('#'+miniArray[0]+miniArray[1]).length){
-							console.log(miniArray[0]+miniArray[1]);
-              cy.$('#'+miniArray[0]+miniArray[1]).classes('transmission_edge');
-							console.log(cy.$('#'+miniArray[0]+miniArray[1]).classes('transmission_edge'));
-							cy.$('#'+miniArray[1]).classes('transmission_node');
-            }
+						// error message in case nodes/edges were not defined in the contact network (for developer usage) //
 						else{
-							alert('The edge with ID '+miniArray[0]+miniArray[1]+' or '+miniArray[1]+miniArray[0]+' does not exist.');
+							console.log('The edge with ID '+miniArray[0]+miniArray[1]+' or '+miniArray[1]+miniArray[0]+' does not exist.');
 						}
           }
           // Qtip code for each node //
