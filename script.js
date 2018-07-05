@@ -19,7 +19,7 @@ window.onload = function() {
         {
           selector: '.transmission_node',
           style:
-            {'background-color': '#32defc',
+            {'background-color': '#bc0101',
               'width':'30',
               'height':'30'}
         },
@@ -31,8 +31,8 @@ window.onload = function() {
         {
           selector: '.transmission_edge',
           style:
-          {'width': 1,
-            'line-color': '#32defc'}
+          {'width': 3,
+            'line-color': '#bc0101'}
         },
       ]
     });
@@ -96,11 +96,22 @@ window.onload = function() {
             if (miniArray[0] === "None"){
               cy.$('#'+miniArray[1]).classes('transmission_node');
             }
-            else{
+						// checking if edge ID (Node2Node1) exists //
+						else if(cy.$('#'+miniArray[1]+miniArray[0]).length){
+							console.log(miniArray[1]+miniArray[0]);
+							cy.$('#'+miniArray[1]+miniArray[0]).classes('transmission_edge');
+							cy.$('#'+miniArray[1]).classes('transmission_node');
+						}
+						// checking if edge ID (Node1Node2) exists  //
+            else if(cy.$('#'+miniArray[0]+miniArray[1]).length){
+							console.log(miniArray[0]+miniArray[1]);
               cy.$('#'+miniArray[0]+miniArray[1]).classes('transmission_edge');
-              cy.$('#'+miniArray[1]).classes('transmission_node');
-              console.log('#'+miniArray[0]+miniArray[1]);
+							console.log(cy.$('#'+miniArray[0]+miniArray[1]).classes('transmission_edge'));
+							cy.$('#'+miniArray[1]).classes('transmission_node');
             }
+						else{
+							alert('The edge with ID '+miniArray[0]+miniArray[1]+' or '+miniArray[1]+miniArray[0]+' does not exist.');
+						}
           }
           // Qtip code for each node //
         /*  cy.nodes().qtip({
