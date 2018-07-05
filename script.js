@@ -1,3 +1,18 @@
+/*
+FAVITESViz is a tool for visualizing the output of FAVITES
+(FrAmework for VIral Transmission and Evolution Simulation)
+
+FAVITESViz was built using the Cytoscape Library, as well as other dependencies credited below.
+
+Dependencies:
+cytoscape-qtip extension
+cytoscape-coSE-bilkent extension for layouts:
+U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
+"A Layout Algorithm For Undirected Compound Graphs", Information Sciences,
+179, pp. 980-994, 2009.
+ */
+
+
 window.onload = function() {
     // Reading FAVITES FILE //
 		var contactInput = document.getElementById('contactInput');
@@ -26,13 +41,17 @@ window.onload = function() {
         {
           selector: 'edge',
           style:
-          {'width': 0.3,}
+          {'width': 0.3,
+					'curve-style': 'bezier',
+        	'target-arrow-color': '#ddd'}
         },
         {
           selector: '.transmission_edge',
           style:
           {'width': 3,
-            'line-color': '#bc0101'}
+          'line-color': '#bc0101',
+					'transition-property': 'background-color, line-color, target-arrow-color',
+					'transition-duration': '0.5s'}
         },
       ]
     });
@@ -78,7 +97,9 @@ window.onload = function() {
   				});
           // Cytoscape Layout function //
 					cy.layout({
-						name:'concentric'
+						name:'cose-bilkent',
+						fit: true,
+						nodeRepulsion: 1000000000
 					}).run();
         }
       reader.readAsText(file);
@@ -96,15 +117,19 @@ window.onload = function() {
         var reader = new FileReader();
         reader.onload = function(e){
           var allLines = reader.result.split("\n");
-          // iterating and plotting the transmission process //
+          // iterating and plotting the transmission nodes //
           for (i=0; i < allLines.length; i++){
             var miniArray = allLines[i].split("\t");
-            if (miniArray[0] === "None"){
+						// checking for empty line or hashtag at the end of file //
+						if (miniArray[0].length == 0){
+							console.log('empty line');
+						}
+            else if (miniArray[0] === "None"){
               cy.$('#'+miniArray[1]).classes('transmission_node');
             }
 						// checking if edge ID (Node1Node2) exists  //
 						else if(cy.$('#'+miniArray[0]+miniArray[1]).length){
-							cy.$('#'+miniArray[0]+miniArray[1]).classes('transmission_edge');
+							cy.$('#'+miniArray[0]+miniArray[1]).delay(miniArray[2]*1000).classes('transmission_edge');
 							cy.$('#'+miniArray[1]).classes('transmission_node');
 						}
 						// checking if edge ID (Node2Node1) exists //
