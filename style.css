@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Oxygen:300');
+@import url('https://fonts.googleapis.com/css?family=Raleway:300');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400');
 
 /*------Resetting any automatic margin and padding settings------*/
 html, body{
+	background-color:#132835;
 	margin: 0;
 	padding: 0;
 	height: 100%;
@@ -35,23 +37,25 @@ html, body{
 }
 
 .Content h1{
-	font-family: 'Oxygen';
+	font-family: 'Raleway';
 	font-size: 520%;
-	font-weight: 100;
+	font-weight: 50;
 	color: #FFFFFF;
 	line-height: 70%;
-	padding-bottom: 10px;
 }
 
-.Content h2{
+
+/*--------------------------------------------------------*/
+
+h2{
 	font-family: 'Montserrat';
-	font-size: 120%;
+	font-size: 160%;
 	font-weight: 70;
 	color: #FFFFFF;
 	line-height: 70%;
+	padding-bottom: 15%;
 }
 
-/*--------------------------------------------------------*/
 .Button{
 	font-family: 'Montserrat';
 	font-size: 100%;

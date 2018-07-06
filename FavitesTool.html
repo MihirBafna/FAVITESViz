@@ -3,7 +3,6 @@
 <head>
 	<title>Favites</title>
 <!-- Cytoscape Dependencies -->
-<!--	<script src="/Users/MihirBafna/Documents/ProjectDependencies/cytoscape.js/dist/cytoscape.js"></script> -->
 	<script src="websitereference/js/cytoscape.js"></script>
 <!-- CDN version of jQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -11,16 +10,22 @@
 	<link type="text/css" rel="stylesheet" href="websitereference/js/jquery.qtip.min.css" />
 	<script src="websitereference/js/cytoscape-qtip.js"></script>
   <script src='websitereference/js/jquery.qtip.min.js'></script>
+<!-- coSE-Bilkent Layout reference -->
+	<script src='websitereference/js/cytoscape-cose-bilkent.js'></script>
+<!-- extra website metadata -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" type="image/png" href="Images/Favicon.png">
 </head>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
-@import url('https://fonts.googleapis.com/css?family=Oxygen:300');
 body{
+	background-color:#132835;
 	background-image: url("Images/navybluenetwork.png");
 }
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:300');
+
 
 #cy {
 		width: 100%;
@@ -38,6 +43,13 @@ body{
 #inputFile2 {
 	color: white;
 	font-family: Oxygen;
+}
+
+#contactInput{
+ padding-top: 10px;
+}
+#transmissionInput{
+ padding-top: 10px;
 }
 </style>
 
