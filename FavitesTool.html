@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-	<title>Favites</title>
+	<title>FAVITES</title>
 <!-- Cytoscape Dependencies -->
 	<script src="websitereference/js/cytoscape.js"></script>
 <!-- CDN version of jQuery -->
@@ -51,16 +51,44 @@ body{
 #transmissionInput{
  padding-top: 10px;
 }
+#backbtn{
+	position:fixed;
+	height: 50px;
+	width: 50px;
+	background-image:url('Images/backbutton.png');
+	background-repeat: no-repeat;
+	background-size: 100%;
+	border: 0;
+	background-color: Transparent;
+	bottom: 30px;
+	left: 30px;
+}
+#backbtn:hover{
+	background-image:url('Images/bluebackbutton.png');
+	height: 50px;
+	width: 50px;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	border: 0;
+	background-color: Transparent;
+	bottom: 30px;
+	left: 30px;
+}
 </style>
 
 
 <body>
 	<div id="cy"></div>
+	<div id="nodeTreeGraph"></div>
 	<div id="inputFile1">Select a contact network file:
 		<input type="file" id="contactInput">
 	</div>
 	<div id="inputFile2">Select a transmission network file:
 		<input type="file" id="transmissionInput">
+	</div>
+	<div>
+		<button type="button" id="backbtn">
+		</button>
 	</div>
 
 <!-- Cytoscape Graph Script -->

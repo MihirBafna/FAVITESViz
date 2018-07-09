@@ -1,8 +1,9 @@
-/*
+/*------------------------------------------------------------------------------
 FAVITESViz is a tool for visualizing the output of FAVITES
 (FrAmework for VIral Transmission and Evolution Simulation)
 
-FAVITESViz was built mainly using the Cytoscape Library, as well as other dependencies credited below.
+FAVITESViz was built mainly using the Cytoscape Library, as well as other
+dependencies credited below.
 
 Dependencies:
 cytoscape-qtip extension
@@ -10,9 +11,20 @@ cytoscape-coSE-bilkent extension for layouts:
 U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 "A Layout Algorithm For Undirected Compound Graphs", Information Sciences,
 179, pp. 980-994, 2009.
- */
+ -----------------------------------------------------------------------------*/
 
- // Cytoscape initializing empty list of elements as a global variable //
+/*------------------------ Initializing variables ----------------------------*/
+
+// hiding elements that need to be hidden upon initialization //
+  $('#backbtn').hide(0);
+
+// global variables //
+var nodeID = null;
+var nodeTreeElements = [];
+var notNodeTree = [];
+var transmissionElements = [];
+
+ // Cytoscape initializing empty main contact/transmission graph //
  var cy = cytoscape({
  	container: document.getElementById('cy'),
  	boxSelectionEnabled: false,
@@ -41,21 +53,42 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
  			'curve-style': 'bezier',
  			'target-arrow-color': '#ddd'}
  		},
- 		{
+    {
  			selector: '.transmission_edge',
  			style:
  			{'width': 3,
  			'line-color': '#bc0101',
  			'transition-property': 'background-color, line-color, target-arrow-color',
- 			'transition-duration':'1s',
+ 			'transition-duration':'0.7s',
  			}
  		},
+    // nodetree style for nodes/edges //
+    {
+      selector: '.Neighborhood',
+      style:
+      {'background-color': '#FFFFFF',
+      },
+    },
+    {
+      selector: '.notNeighborhood',
+      style:
+      {
+      'background-color': '#000000',
+      'line-color':'#000000',
+      }
+    },
  	]
  });
+
+/*--------------------------- Function Definitions ---------------------------*/
 
  // Main function //
  window.onload = function() {
 	contacttransmitGraph();
+  cy.on('click','node',function(){
+    nodeID= this.id();
+    nodeTreeView(nodeID);
+  });
  };
 
 // Initializing the graph with both contact and transmission network files //
@@ -64,7 +97,7 @@ function contacttransmitGraph(){
 		var contactInput = document.getElementById('contactInput');
     var transmissionInput = document.getElementById('transmissionInput');
 		var fileDisplayArea = document.getElementById('fileDisplayArea');
-// Contact Network file reading and displaying //
+		// Contact Network file reading and displaying //
 		contactInput.addEventListener('change', function(e) {
 			var file = contactInput.files[0];
 			var textType = /text.*/;
@@ -87,7 +120,7 @@ function contacttransmitGraph(){
               cy.add({group: "edges", data: {id: contactArray[1]+contactArray[2],source: contactArray[1], target: contactArray[2]}});
             }
           }
-          // Qtip code for each node//
+        /*  // Qtip code for each node//
           cy.nodes().qtip({
   					content: function(){
               return this.id()
@@ -103,8 +136,9 @@ function contacttransmitGraph(){
   							height: 8
   						}
   					}
-  				});
-          // Cytoscape Layout function //
+  				});*/
+
+					// Cytoscape Layout function //
 					cy.layout({
 						name:'cose-bilkent',
 						fit: true,
@@ -115,7 +149,7 @@ function contacttransmitGraph(){
       reader.readAsText(file);
       }
     })
-// Transmission Network file reading and displaying //
+		// Transmission Network file reading and displaying //
     transmissionInput.addEventListener('change', function(e) {
       var file = transmissionInput.files[0];
       var textType = /text.*/;
@@ -138,8 +172,7 @@ function contacttransmitGraph(){
             }
 						// checking if edge ID (Node1Node2) exists  //
 						else if(cy.$('#'+transmitArray[0]+transmitArray[1]).length){
-							cy.$('#'+transmitArray[0]+transmitArray[1]).delay(transmitArray[2]*1000).classes('transmission_edge');
-							console.log(transmitArray[2]*1000);
+							cy.$('#'+transmitArray[0]+transmitArray[1]).classes('transmission_edge');
 							cy.$('#'+transmitArray[1]).classes('transmission_node');
 						}
 						// checking if edge ID (Node2Node1) exists //
@@ -158,9 +191,15 @@ function contacttransmitGraph(){
     })
 }
 
-/* code for user manipulation and input after data in graph is initialized */
+/*---------- functions for user manipulation after graph initializes ---------*/
 
-// separate 'tree' view when one clicks on an individual node //
-function nodeTreeView(){
-
+// individual node tree view //
+function nodeTreeView(nodeTreeID){
+  var nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
+  var notNodeTree = cy.elements().not(nodeTreeElements);
+  if(nodeTreeElements !== null){
+    notNodeTree.addClass('notNeighborhood');
+    nodeTreeElements.addClass('Neighborhood');
+    $('#backbtn').show(0);
+  }
 }
