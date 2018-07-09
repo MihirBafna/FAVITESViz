@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Oxygen:300');
+@import url('https://fonts.googleapis.com/css?family=Muli:300');
 @import url('https://fonts.googleapis.com/css?family=Raleway:300');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400');
 
@@ -16,47 +16,43 @@ html, body{
 	width: 100%;
 	margin: auto;
 	background: url("Images/Indexpagebackground.png");
-	display: table;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
 	top: 0;
 	background-size: cover;
 }
 
-.HomePage .Center{
-	display: table-cell;
-	vertical-align: middle;
-	width: 100%;
-	max-width: none;
-}
-
-/*------style for HomePage content (text and buttons)------*/
-.Content{
-	max-width: 600px;
-	margin: 0 auto;
-	text-align: center;
-	padding-bottom: 15%;
-}
-
-.Content h1{
+.HomePage h1{
 	font-family: 'Raleway';
-	font-size: 520%;
-	font-weight: 50;
+	font-size: 500%;
+	font-weight:10;
+	line-height: 0;
 	color: #FFFFFF;
-	line-height: 70%;
+	padding-bottom: -20%;
+	padding-top: 20%;
 }
 
+.HomePage .rectangle{
+	height: 4px;
+	width:400px;
+	background-color: #FFFFFF;
+	padding-top: -100;
+}
 
-/*--------------------------------------------------------*/
-
-h2{
+.HomePage h2{
 	font-family: 'Montserrat';
-	font-size: 160%;
+	font-size: 30px;
 	font-weight: 70;
+	line-height: 0;
 	color: #FFFFFF;
-	line-height: 70%;
-	padding-bottom: 15%;
+	padding-bottom: 70%;
+	padding-top: 20px;
 }
 
-.Button{
+
+.HomePage .Button{
 	font-family: 'Montserrat';
 	font-size: 100%;
 	font-weight: 400;
