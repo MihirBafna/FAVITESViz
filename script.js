@@ -195,11 +195,16 @@ function contacttransmitGraph(){
 
 // individual node tree view //
 function nodeTreeView(nodeTreeID){
-  var nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
-  var notNodeTree = cy.elements().not(nodeTreeElements);
+  nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
+  notNodeTree = cy.elements().not(nodeTreeElements);
   if(nodeTreeElements !== null){
-    notNodeTree.addClass('notNeighborhood');
-    nodeTreeElements.addClass('Neighborhood');
+    notNodeTree.toggleClass('notNeighborhood',true);
+    nodeTreeElements.addClass('Neighborhood',true);
     $('#backbtn').show(0);
+//Resetting the graph when back button is pressed //
+    backbtn.addEventListener('click',function(){
+      notNodeTree.toggleClass('notNeighborhood',false);
+      nodeTreeElements.addClass('Neighborhood',false);
+    });
   }
 }
