@@ -16,13 +16,14 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 /*------------------------ Initializing variables ----------------------------*/
 
 // hiding elements that need to be hidden upon initialization //
-  $('#backbtn').hide(0);
+$('#backbtn').hide(0);
 
 // global variables //
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
 var transmissionElements = [];
+var nodeSelectMode = false;
 
  // Cytoscape initializing empty main contact/transmission graph //
  var cy = cytoscape({
@@ -73,8 +74,7 @@ var transmissionElements = [];
       selector: '.notNeighborhood',
       style:
       {
-      'background-color': '#000000',
-      'line-color':'#000000',
+        'visibility': 'hidden',
       }
     },
  	]
@@ -120,23 +120,6 @@ function contacttransmitGraph(){
               cy.add({group: "edges", data: {id: contactArray[1]+contactArray[2],source: contactArray[1], target: contactArray[2]}});
             }
           }
-        /*  // Qtip code for each node//
-          cy.nodes().qtip({
-  					content: function(){
-              return this.id()
-            },
-  					position: {
-  						my: 'top center',
-  						at: 'bottom center'
-  					},
-  					style: {
-  						classes: 'qtip-bootstrap',
-  						tip: {
-  							width: 10,
-  							height: 8
-  						}
-  					}
-  				});*/
 
 					// Cytoscape Layout function //
 					cy.layout({
@@ -195,16 +178,46 @@ function contacttransmitGraph(){
 
 // individual node tree view //
 function nodeTreeView(nodeTreeID){
-  nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
-  notNodeTree = cy.elements().not(nodeTreeElements);
-  if(nodeTreeElements !== null){
+  if(nodeSelectMode == false){
+    nodeSelectMode = true;
+    nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
+    notNodeTree = cy.elements().not(nodeTreeElements);
     notNodeTree.toggleClass('notNeighborhood',true);
     nodeTreeElements.addClass('Neighborhood',true);
     $('#backbtn').show(0);
+    cy.layout({
+      name: 'circle',
+      fit:'true',
+    }).run();
+    // Qtip code for each node//
+    cy.nodes().qtip({
+      content: function(){
+        return this.id()
+      },
+      position: {
+          my: 'top center',
+          at: 'bottom center'
+      },
+      style: {
+        classes: 'qtip-bootstrap',
+        tip: {
+          width: 10,
+          height: 8
+          }
+        }
+      });
 //Resetting the graph when back button is pressed //
     backbtn.addEventListener('click',function(){
       notNodeTree.toggleClass('notNeighborhood',false);
       nodeTreeElements.addClass('Neighborhood',false);
+      $('#backbtn').hide(0);
+      nodeSelectMode = false;
+      cy.layout({
+        name: 'cose-bilkent',
+        fit:'true',
+        nodeRepulsion: 1000000000,
+        avoidOverlap: true
+      }).run();
     });
   }
 }
