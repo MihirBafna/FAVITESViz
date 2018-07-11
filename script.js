@@ -19,6 +19,7 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 $('#backbtn').hide(0);
 
 // global variables //
+var transmissionDelay = 0;
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
@@ -44,8 +45,10 @@ var nodeSelectMode = false;
  			selector: '.transmission_node',
  			style:
  				{'background-color': '#bc0101',
- 					'width':'30',
- 					'height':'30'}
+        'line-color':'#bc0101',
+        'transition-property': 'background-color, line-color, target-arrow-color',
+        'transition-duration':'0.7s',
+      }
  		},
  		{
  			selector: 'edge',
@@ -57,11 +60,11 @@ var nodeSelectMode = false;
     {
  			selector: '.transmission_edge',
  			style:
- 			{'width': 3,
- 			'line-color': '#bc0101',
- 			'transition-property': 'background-color, line-color, target-arrow-color',
- 			'transition-duration':'0.7s',
- 			}
+ 				{'line-color':'#bc0101',
+        'transition-property': 'background-color, line-color, target-arrow-color',
+        'transition-duration':'0.7s',
+        'width':'3',
+      }
  		},
     // nodetree style for nodes/edges //
     {
@@ -151,17 +154,21 @@ function contacttransmitGraph(){
 							console.log('empty line');
 						}
             else if (transmitArray[0] === "None"){
-              cy.$('#'+transmitArray[1]).classes('transmission_node');
+              updateTransmitNode('#'+transmitArray[1],0);
             }
 						// checking if edge ID (Node1Node2) exists  //
 						else if(cy.$('#'+transmitArray[0]+transmitArray[1]).length){
-							cy.$('#'+transmitArray[0]+transmitArray[1]).classes('transmission_edge');
-							cy.$('#'+transmitArray[1]).classes('transmission_node');
+              transmissionDelay = Math.ceil(transmitArray[2]*1000);
+              console.log(transmissionDelay);
+              updateTransmitEdge('#'+transmitArray[0]+transmitArray[1],transmissionDelay);
+              updateTransmitNode('#'+transmitArray[1],transmissionDelay);
 						}
 						// checking if edge ID (Node2Node1) exists //
 						else if(cy.$('#'+transmitArray[1]+transmitArray[0]).length){
-							cy.$('#'+transmitArray[1]+transmitArray[0]).classes('transmission_edge');
-							cy.$('#'+transmitArray[1]).classes('transmission_node');
+              transmissionDelay = Math.ceil(transmitArray[2]*1000);
+              console.log(transmissionDelay);
+              updateTransmitEdge('#'+transmitArray[1]+transmitArray[0],transmissionDelay);
+              updateTransmitNode('#'+transmitArray[1],transmissionDelay);
 						}
 						// error message in case nodes/edges were not defined in the contact network (for developer usage) //
 						else{
@@ -183,7 +190,7 @@ function nodeTreeView(nodeTreeID){
     nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
     notNodeTree = cy.elements().not(nodeTreeElements);
     notNodeTree.toggleClass('notNeighborhood',true);
-    nodeTreeElements.addClass('Neighborhood',true);
+    nodeTreeElements.toggleClass('Neighborhood',true);
     $('#backbtn').show(0);
     cy.layout({
       name: 'circle',
@@ -209,7 +216,7 @@ function nodeTreeView(nodeTreeID){
 //Resetting the graph when back button is pressed //
     backbtn.addEventListener('click',function(){
       notNodeTree.toggleClass('notNeighborhood',false);
-      nodeTreeElements.addClass('Neighborhood',false);
+      nodeTreeElements.toggleClass('Neighborhood',false);
       $('#backbtn').hide(0);
       nodeSelectMode = false;
       cy.layout({
@@ -219,5 +226,21 @@ function nodeTreeView(nodeTreeID){
         avoidOverlap: true
       }).run();
     });
+  }
+}
+
+function updateTransmitNode(nodeID,delay){
+  if(nodeID.length){
+    window.setTimeout(function(){
+      cy.$(nodeID).classes('transmission_node');
+    },delay);
+  }
+}
+
+function updateTransmitEdge(edgeID,delay){
+  if(edgeID.length){
+    window.setTimeout(function(){
+      cy.$(edgeID).classes('transmission_edge');
+    },delay);
   }
 }
