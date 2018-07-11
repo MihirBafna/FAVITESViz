@@ -27,8 +27,8 @@ var transmissionElements = [];
 var nodeSelectMode = false;
 
  // Cytoscape initializing empty main contact/transmission graph //
- var cy = cytoscape({
- 	container: document.getElementById('cy'),
+var cy = cytoscape({
+  container: document.getElementById('cy'),
  	boxSelectionEnabled: false,
  	autoungrabify: true,
  	elements: [
@@ -47,7 +47,7 @@ var nodeSelectMode = false;
  				{'background-color': '#bc0101',
         'line-color':'#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration':'0.7s',
+        'transition-duration':'0.3s',
       }
  		},
  		{
@@ -62,7 +62,7 @@ var nodeSelectMode = false;
  			style:
  				{'line-color':'#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration':'0.7s',
+        'transition-duration':'0.3s',
         'width':'3',
       }
  		},
@@ -70,7 +70,7 @@ var nodeSelectMode = false;
     {
       selector: '.Neighborhood',
       style:
-      {'background-color': '#FFFFFF',
+      {
       },
     },
     {
@@ -97,7 +97,7 @@ var nodeSelectMode = false;
 // Initializing the graph with both contact and transmission network files //
 function contacttransmitGraph(){
     // Reading FAVITES FILE //
-		var contactInput = document.getElementById('contactInput');
+    var contactInput = document.getElementById('contactInput');
     var transmissionInput = document.getElementById('transmissionInput');
 		var fileDisplayArea = document.getElementById('fileDisplayArea');
 		// Contact Network file reading and displaying //
@@ -158,14 +158,14 @@ function contacttransmitGraph(){
             }
 						// checking if edge ID (Node1Node2) exists  //
 						else if(cy.$('#'+transmitArray[0]+transmitArray[1]).length){
-              transmissionDelay = Math.ceil(transmitArray[2]*1000);
+              transmissionDelay = Math.ceil(transmitArray[2]*750);
               console.log(transmissionDelay);
               updateTransmitEdge('#'+transmitArray[0]+transmitArray[1],transmissionDelay);
               updateTransmitNode('#'+transmitArray[1],transmissionDelay);
 						}
 						// checking if edge ID (Node2Node1) exists //
 						else if(cy.$('#'+transmitArray[1]+transmitArray[0]).length){
-              transmissionDelay = Math.ceil(transmitArray[2]*1000);
+              transmissionDelay = Math.ceil(transmitArray[2]*750);
               console.log(transmissionDelay);
               updateTransmitEdge('#'+transmitArray[1]+transmitArray[0],transmissionDelay);
               updateTransmitNode('#'+transmitArray[1],transmissionDelay);
@@ -192,10 +192,8 @@ function nodeTreeView(nodeTreeID){
     notNodeTree.toggleClass('notNeighborhood',true);
     nodeTreeElements.toggleClass('Neighborhood',true);
     $('#backbtn').show(0);
-    cy.layout({
-      name: 'circle',
-      fit:'true',
-    }).run();
+    // new layout //
+    cy.center(nodeID);
     // Qtip code for each node//
     cy.nodes().qtip({
       content: function(){
@@ -213,7 +211,7 @@ function nodeTreeView(nodeTreeID){
           }
         }
       });
-//Resetting the graph when back button is pressed //
+    //Resetting the graph when back button is pressed //
     backbtn.addEventListener('click',function(){
       notNodeTree.toggleClass('notNeighborhood',false);
       nodeTreeElements.toggleClass('Neighborhood',false);
