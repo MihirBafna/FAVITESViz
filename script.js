@@ -16,7 +16,7 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 
 /*------------------------ Initializing variables ----------------------------*/
 
-// hiding elements that need to be hidden upon initialization //
+// hiding elements upon initialization //
 $('#backbtn').hide(0);
 $('#nodeInfo').hide(0);
 
@@ -25,11 +25,11 @@ var transmissionDelay = 0;
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
-var transmissionElements = [];
 var nodeSelectMode = false;
-var nodeInfo = [];
 var showGraphmode = false;
+var transmitDone = false;
 var infectData = null;
+var nodeInfo = [];
 
  // Cytoscape initializing empty main contact/transmission graph //
 var cy = cytoscape({
@@ -184,6 +184,7 @@ function contacttransmitGraph(){
 							console.log('The edge with ID '+transmitArray[0]+transmitArray[1]+' or '+transmitArray[1]+transmitArray[0]+' does not exist.');
 						}
           }
+          transmitDone = true;
         }
       reader.readAsText(file);
       }
@@ -194,7 +195,7 @@ function contacttransmitGraph(){
 
 // individual node tree view //
 function nodeTreeView(nodeTreeID,infectdata){
-  if(nodeSelectMode == false){
+  if(nodeSelectMode == false && transmitDone == true){
     nodeSelectMode = true;
     showGraphmode = true;
     nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
@@ -239,6 +240,9 @@ function nodeTreeView(nodeTreeID,infectdata){
         avoidOverlap: true
       }).run();
     });
+  }
+  else{
+    alert('Transmission graph has not been uploaded');
   }
 }
 

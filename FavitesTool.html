@@ -100,20 +100,24 @@ body{
 
 
 <body>
+	<!-- mainGraph -->
 	<div id="cy"></div>
-	<div id="nodeTreeGraph"></div>
 	<div id="inputFile1">Select a contact network file:
 		<input type="file" id="contactInput">
 	</div>
 	<div id="inputFile2">Select a transmission network file:
 		<input type="file" id="transmissionInput">
 	</div>
-	<div class = "topleft">
-		<ul id = "nodeInfo"></ul>
-	</div>
-	<div class="bottomright" id="infectdiv">
-		<canvas id="infectGraph" width = "533" height="300"></canvas>
-	</div>
+	<!-- nodeTreeGraph -->
+	<div id="nodeTreeGraph"></div>
+	<rectangle>
+		<div class = "topleft">
+			<ul id = "nodeInfo"></ul>
+		</div>
+		<div class="bottomright" id="infectdiv">
+			<canvas id="infectGraph" width = "533" height="300"></canvas>
+		</div>
+	</rectangle>
 	<div class="loader"></div>
 	<div>
 		<button type="button" id="backbtn"></button>
