@@ -10,11 +10,14 @@
 	<link type="text/css" rel="stylesheet" href="websitereference/js/jquery.qtip.min.css" />
 	<script src="websitereference/js/cytoscape-qtip.js"></script>
   <script src='websitereference/js/jquery.qtip.min.js'></script>
+<!-- Chart.js -->
+	<script src="websitereference/js/Chart.min.js"></script>
 <!-- coSE-Bilkent Layout reference -->
 	<script src='websitereference/js/cytoscape-cose-bilkent.js'></script>
 <!-- extra website metadata -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" type="image/png" href="Images/Favicon.png">
+	<link href="https://fonts.googleapis.com/css?family=Oxygen:300" rel="stylesheet">
 </head>
 
 <style>
@@ -23,7 +26,6 @@ body{
 	background-image: url("Images/navybluenetwork.png");
 }
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
 @import url('https://fonts.googleapis.com/css?family=Oxygen:300');
 
 
@@ -75,7 +77,25 @@ body{
 	left: 30px;
 }
 
+.topright{
+	position:absolute;
+	top:30px;
+	right:30px;
+}
 
+.topright #nodeInfo{
+	list-style-type: none;
+}
+
+.bottomright{
+	position:absolute;
+	bottom:30px;
+	right:30px;
+}
+
+.bottomright #infectGraph{
+	list-style-type: none;
+}
 </style>
 
 
@@ -88,10 +108,15 @@ body{
 	<div id="inputFile2">Select a transmission network file:
 		<input type="file" id="transmissionInput">
 	</div>
+	<div class = "topleft">
+		<ul id = "nodeInfo"></ul>
+	</div>
+	<div class="bottomright" id="infectdiv">
+		<canvas id="infectGraph" width = "533" height="300"></canvas>
+	</div>
 	<div class="loader"></div>
 	<div>
-		<button type="button" id="backbtn">
-		</button>
+		<button type="button" id="backbtn"></button>
 	</div>
 
 <!-- Cytoscape Graph Script -->

@@ -6,6 +6,7 @@ FAVITESViz was built mainly using the Cytoscape Library, as well as other
 dependencies credited below.
 
 Dependencies:
+chart.js
 cytoscape-qtip extension
 cytoscape-coSE-bilkent extension for layouts:
 U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
@@ -17,6 +18,7 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 
 // hiding elements that need to be hidden upon initialization //
 $('#backbtn').hide(0);
+$('#nodeInfo').hide(0);
 
 // global variables //
 var transmissionDelay = 0;
@@ -25,12 +27,16 @@ var nodeTreeElements = [];
 var notNodeTree = [];
 var transmissionElements = [];
 var nodeSelectMode = false;
+var nodeInfo = [];
+var showGraphmode = false;
+var infectData = null;
 
  // Cytoscape initializing empty main contact/transmission graph //
 var cy = cytoscape({
   container: document.getElementById('cy'),
  	boxSelectionEnabled: false,
  	autoungrabify: true,
+  motionblur:true,
  	elements: [
  	],
  	style: [
@@ -83,6 +89,12 @@ var cy = cytoscape({
  	]
  });
 
+// initializing infection graph //
+Chart.defaults.global.defaultFontFamily = 'Oxygen';
+ var ctx = document.getElementById("infectGraph").getContext('2d');
+ var infectGraph = new Chart(ctx, {
+});
+
 /*--------------------------- Function Definitions ---------------------------*/
 
  // Main function //
@@ -123,7 +135,6 @@ function contacttransmitGraph(){
               cy.add({group: "edges", data: {id: contactArray[1]+contactArray[2],source: contactArray[1], target: contactArray[2]}});
             }
           }
-
 					// Cytoscape Layout function //
 					cy.layout({
 						name:'cose-bilkent',
@@ -159,14 +170,12 @@ function contacttransmitGraph(){
 						// checking if edge ID (Node1Node2) exists  //
 						else if(cy.$('#'+transmitArray[0]+transmitArray[1]).length){
               transmissionDelay = Math.ceil(transmitArray[2]*750);
-              console.log(transmissionDelay);
               updateTransmitEdge('#'+transmitArray[0]+transmitArray[1],transmissionDelay);
               updateTransmitNode('#'+transmitArray[1],transmissionDelay);
 						}
 						// checking if edge ID (Node2Node1) exists //
 						else if(cy.$('#'+transmitArray[1]+transmitArray[0]).length){
               transmissionDelay = Math.ceil(transmitArray[2]*750);
-              console.log(transmissionDelay);
               updateTransmitEdge('#'+transmitArray[1]+transmitArray[0],transmissionDelay);
               updateTransmitNode('#'+transmitArray[1],transmissionDelay);
 						}
@@ -184,14 +193,16 @@ function contacttransmitGraph(){
 /*---------- functions for user manipulation after graph initializes ---------*/
 
 // individual node tree view //
-function nodeTreeView(nodeTreeID){
+function nodeTreeView(nodeTreeID,infectdata){
   if(nodeSelectMode == false){
     nodeSelectMode = true;
+    showGraphmode = true;
     nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
     notNodeTree = cy.elements().not(nodeTreeElements);
     notNodeTree.toggleClass('notNeighborhood',true);
     nodeTreeElements.toggleClass('Neighborhood',true);
     $('#backbtn').show(0);
+    $('#nodeInfo').show(0);
     // new layout //
     cy.center(nodeID);
     // Qtip code for each node//
@@ -211,12 +222,16 @@ function nodeTreeView(nodeTreeID){
           }
         }
       });
+    showInfectGraph(infectdata);
     //Resetting the graph when back button is pressed //
     backbtn.addEventListener('click',function(){
       notNodeTree.toggleClass('notNeighborhood',false);
       nodeTreeElements.toggleClass('Neighborhood',false);
-      $('#backbtn').hide(0);
+      showGraphmode = false;
       nodeSelectMode = false;
+      hideInfectGraph();
+      $('#backbtn').hide(0);
+      $('#nodeInfo').hide(0);
       cy.layout({
         name: 'cose-bilkent',
         fit:'true',
@@ -240,5 +255,47 @@ function updateTransmitEdge(edgeID,delay){
     window.setTimeout(function(){
       cy.$(edgeID).classes('transmission_edge');
     },delay);
+  }
+}
+
+function showInfectGraph(infectdata){
+  if(showGraphmode == true){
+    // adding the newly acquired data to show the graph //
+    infectGraph = new Chart(ctx, {
+       type: 'line',
+       data:{
+         xAxisID:'Time',
+         yAxisID:'Infected',
+         datasets:[{
+           label:'People Infected',
+           data: [30,40,50],
+           backgroundColor:"#bc0101"
+         }]
+       },
+       options:{
+        scales: {
+         yAxes: [{
+           scaleLabel: {
+             display: true,
+             labelString: '# of Infected'
+           }
+         }],
+         xAxes: [{
+           scaleLabel: {
+             display: true,
+             labelString: 'Time'
+           }
+         }]
+       }
+     }
+   });
+  }
+}
+
+function hideInfectGraph(){
+  if(showGraphmode==false){
+    // changing graph data to null (to hide) //
+    infectGraph = new Chart(ctx, {
+    });
   }
 }
