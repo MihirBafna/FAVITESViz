@@ -99,6 +99,11 @@ Chart.defaults.global.defaultFontFamily = 'Oxygen';
 var ctx = document.getElementById("infectGraph").getContext('2d');
 var infectGraph = new Chart(ctx, {});
 
+// initializing remission chart //
+Chart.defaults.global.defaultFontFamily = 'Oxygen';
+var ctx2 = document.getElementById("remissionGraph").getContext('2d');
+var remissionGraph = new Chart(ctx2, {});
+
 /*--------------------------- Function Definitions ---------------------------*/
 
 // Main function //
@@ -202,6 +207,7 @@ function contacttransmitGraph() {
             console.log('The edge with ID ' + transmitArray[0] + transmitArray[1] + ' or ' + transmitArray[1] + transmitArray[0] + ' does not exist.');
           }
         }
+        //checking if transmission is done //
         transmitDone = true;
       }
       reader.readAsText(file);
@@ -266,14 +272,14 @@ function nodeTreeView(nodeTreeID, infectdata) {
           }
         }
       });
-      showInfectGraph(infectdata);
+      showCharts(infectdata);
       //Resetting the graph when back button is pressed //
       backbtn.addEventListener('click', function() {
         notNodeTree.toggleClass('notNeighborhood', false);
         nodeTreeElements.toggleClass('Neighborhood', false);
         showGraphmode = false;
         nodeSelectMode = false;
-        hideInfectGraph();
+        hideCharts();
         $('#backbtn').hide(0);
         $('#nodeInfo').hide(0);
 
@@ -285,7 +291,7 @@ function nodeTreeView(nodeTreeID, infectdata) {
 }
 
 
-function showInfectGraph(infectdata) {
+function showCharts(infectdata) {
   if (showGraphmode == true) {
     // adding the newly acquired data to show the graph //
     infectGraph = new Chart(ctx, {
@@ -316,12 +322,41 @@ function showInfectGraph(infectdata) {
         }
       }
     });
+    remissionGraph = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        xAxisID: 'Time',
+        yAxisID: 'Remission',
+        datasets: [{
+          label: 'People in Remission',
+          data: [30, 40, 50],
+          backgroundColor: "#1eb0ff"
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: '# in Remission'
+            }
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }]
+        }
+      }
+    });
   }
 }
 
-function hideInfectGraph() {
+function hideCharts() {
   if (showGraphmode == false) {
-    // changing graph data to null (to hide) //
+    // changing both graph data to null (to hide) //
     infectGraph = new Chart(ctx, {});
+    remissionGraph = new Chart(ctx2, {});
   }
 }
