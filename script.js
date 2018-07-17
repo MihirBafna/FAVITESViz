@@ -34,39 +34,41 @@ var nodeInfo = [];
  // Cytoscape initializing empty main contact/transmission graph //
 var cy = cytoscape({
   container: document.getElementById('cy'),
- 	boxSelectionEnabled: false,
- 	autoungrabify: true,
+  boxSelectionEnabled: false,
+  autoungrabify: true,
   motionblur:true,
- 	elements: [
+  elements: [
  	],
- 	style: [
- 		{
- 			selector: 'node',
- 			style:
- 				{'background-color': '#e3eaf4',
- 					'width':'30',
- 					'height':'30'}
- 		},
- 		{
- 			selector: '.transmission_node',
- 			style:
- 				{'background-color': '#bc0101',
-        'line-color':'#bc0101',
-        'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration':'0.3s',
+  style: [
+    {
+    selector: 'node',
+    style:{
+      'background-color': '#e3eaf4',
+      'width':'30',
+      'height':'30'
       }
  		},
  		{
- 			selector: 'edge',
- 			style:
- 			{'width': 0.3,
- 			'curve-style': 'bezier',
- 			'target-arrow-color': '#ddd'}
+    selector: '.transmission_node',
+ 		style:{
+      'background-color': '#bc0101',
+      'line-color':'#bc0101',
+      'transition-property': 'background-color, line-color, target-arrow-color',
+      'transition-duration':'0.3s',
+      }
+ 		},
+ 		{
+      selector: 'edge',
+ 			style:{
+        'width': 0.3,
+        'curve-style': 'bezier',
+        'target-arrow-color': '#ddd'
+      }
  		},
     {
  			selector: '.transmission_edge',
- 			style:
- 				{'line-color':'#bc0101',
+ 			style:{
+        'line-color':'#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
         'transition-duration':'0.3s',
         'width':'3',
@@ -75,31 +77,29 @@ var cy = cytoscape({
     // nodetree style for nodes/edges //
     {
       selector: '.Neighborhood',
-      style:
-      {
+      style:{
       },
     },
     {
       selector: '.notNeighborhood',
-      style:
-      {
+      style:{
         'visibility': 'hidden',
       }
     },
  	]
- });
+});
 
 // initializing infection graph //
 Chart.defaults.global.defaultFontFamily = 'Oxygen';
- var ctx = document.getElementById("infectGraph").getContext('2d');
+var ctx = document.getElementById("infectGraph").getContext('2d');
  var infectGraph = new Chart(ctx, {
 });
 
 /*--------------------------- Function Definitions ---------------------------*/
 
  // Main function //
- window.onload = function() {
-	contacttransmitGraph();
+window.onload = function() {
+  contacttransmitGraph();
   cy.on('click','node',function(){
     nodeID= this.id();
     nodeTreeView(nodeID);
@@ -117,20 +117,18 @@ function contacttransmitGraph(){
 			var file = contactInput.files[0];
 			var textType = /text.*/;
 			if (file.type.match(textType)) {
-				$(function(){
-					$('#inputFile1').fadeOut("slow");
-				});
+				$('#inputFile1').fadeOut("slow");
 				var reader = new FileReader();
         reader.onload = function(e){
           var contactLines = reader.result.split("\n");
           // Iterating and adding each element to cytest graph //
           for (i=0; i < contactLines.length; i++){
             var contactArray = contactLines[i].split("\t");
-          // ADDING NODES //
+            // ADDING NODES //
             if (contactArray[0] === "NODE"){
               cy.add({group: "nodes",data:{id: contactArray[1]}});
             }
-          // ADDING EDGES //
+            // ADDING EDGES //
             else if (contactArray[0] === "EDGE"){
               cy.add({group: "edges", data: {id: contactArray[1]+contactArray[2],source: contactArray[1], target: contactArray[2]}});
             }
@@ -151,9 +149,7 @@ function contacttransmitGraph(){
       var file = transmissionInput.files[0];
       var textType = /text.*/;
       if (file.type.match(textType)) {
-				$(function(){
-					$('#inputFile2').fadeOut("slow");
-				});
+				$('#inputFile2').fadeOut("slow");
         var reader = new FileReader();
         reader.onload = function(e){
           var transmitLines = reader.result.split("\n");
@@ -167,15 +163,18 @@ function contacttransmitGraph(){
             else if (transmitArray[0] === "None"){
               updateTransmitNode('#'+transmitArray[1],0);
             }
+            else if(transmitArray[0]==transmitArray[1]){
+              updateRemissionNode('#'+transmitArray[0]);
+            }
 						// checking if edge ID (Node1Node2) exists  //
 						else if(cy.$('#'+transmitArray[0]+transmitArray[1]).length){
-              transmissionDelay = Math.ceil(transmitArray[2]*750);
+              transmissionDelay = Math.ceil(transmitArray[2]*500);
               updateTransmitEdge('#'+transmitArray[0]+transmitArray[1],transmissionDelay);
               updateTransmitNode('#'+transmitArray[1],transmissionDelay);
 						}
 						// checking if edge ID (Node2Node1) exists //
 						else if(cy.$('#'+transmitArray[1]+transmitArray[0]).length){
-              transmissionDelay = Math.ceil(transmitArray[2]*750);
+              transmissionDelay = Math.ceil(transmitArray[2]*500);
               updateTransmitEdge('#'+transmitArray[1]+transmitArray[0],transmissionDelay);
               updateTransmitNode('#'+transmitArray[1],transmissionDelay);
 						}
@@ -193,9 +192,26 @@ function contacttransmitGraph(){
 
 /*---------- functions for user manipulation after graph initializes ---------*/
 
+function updateTransmitNode(nodeID,delay){
+  if(nodeID.length){
+    window.setTimeout(function(){
+      cy.$(nodeID).classes('transmission_node');
+    },delay);
+  }
+}
+
+function updateTransmitEdge(edgeID,delay){
+  if(edgeID.length){
+    window.setTimeout(function(){
+      cy.$(edgeID).classes('transmission_edge');
+    },delay);
+  }
+}
+
 // individual node tree view //
 function nodeTreeView(nodeTreeID,infectdata){
-  if(nodeSelectMode == false && transmitDone == true){
+if(transmitDone == true){
+  if(nodeSelectMode == false){
     nodeSelectMode = true;
     showGraphmode = true;
     nodeTreeElements = cy.$('#'+nodeTreeID).closedNeighborhood();
@@ -233,34 +249,15 @@ function nodeTreeView(nodeTreeID,infectdata){
       hideInfectGraph();
       $('#backbtn').hide(0);
       $('#nodeInfo').hide(0);
-      cy.layout({
-        name: 'cose-bilkent',
-        fit:'true',
-        nodeRepulsion: 1000000000,
-        avoidOverlap: true
-      }).run();
+
     });
   }
-  else{
+}
+else{
     alert('Transmission graph has not been uploaded');
   }
 }
 
-function updateTransmitNode(nodeID,delay){
-  if(nodeID.length){
-    window.setTimeout(function(){
-      cy.$(nodeID).classes('transmission_node');
-    },delay);
-  }
-}
-
-function updateTransmitEdge(edgeID,delay){
-  if(edgeID.length){
-    window.setTimeout(function(){
-      cy.$(edgeID).classes('transmission_edge');
-    },delay);
-  }
-}
 
 function showInfectGraph(infectdata){
   if(showGraphmode == true){
