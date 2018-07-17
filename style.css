@@ -1,106 +1,109 @@
 @import url('https://fonts.googleapis.com/css?family=Muli:300');
 @import url('https://fonts.googleapis.com/css?family=Raleway:300');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400');
-
 /*------Resetting any automatic margin and padding settings------*/
-html, body{
-	background-color:#132835;
-	margin: 0;
-	padding: 0;
-	height: 100%;
-	width: 100%;
+
+html, body {
+  background-color: #132835;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
+
 /*------style for entire HomePage------*/
-.HomePage{
-	height:100%;
-	width: 100%;
-	margin: auto;
-	background: url("Images/Indexpagebackground.png");
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	text-align: center;
-	top: 0;
-	background-size: cover;
+
+.HomePage {
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  background: url("Images/Indexpagebackground.png");
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  top: 0;
+  background-size: cover;
 }
 
-.HomePage h1{
-	font-family: 'Raleway';
-	font-size: 500%;
-	font-weight:10;
-	line-height: 0;
-	color: #FFFFFF;
-	padding-bottom: -20%;
-	padding-top: 30%;
+.HomePage h1 {
+  font-family: 'Raleway';
+  font-size: 500%;
+  font-weight: 10;
+  line-height: 0;
+  color: #FFFFFF;
+  padding-bottom: -20%;
+  padding-top: 30%;
 }
 
-.HomePage .rectangle{
-	height: 4px;
-	width:400px;
-	background-color: #FFFFFF;
-	padding-top: -100;
+.HomePage .rectangle {
+  height: 4px;
+  width: 400px;
+  background-color: #FFFFFF;
+  padding-top: -100;
 }
 
-.HomePage h2{
-	font-family: 'Montserrat';
-	font-size: 30px;
-	font-weight: 70;
-	line-height: 0;
-	color: #FFFFFF;
-	padding-bottom: 80%;
-	padding-top: 20px;
+.HomePage h2 {
+  font-family: 'Montserrat';
+  font-size: 30px;
+  font-weight: 70;
+  line-height: 0;
+  color: #FFFFFF;
+  padding-bottom: 80%;
+  padding-top: 20px;
 }
 
-
-.HomePage .Button{
-	font-family: 'Montserrat';
-	font-size: 100%;
-	font-weight: 400;
-	color: #FFFFFF;
-	text-transform:uppercase;
-	text-decoration: none;
-	border: solid #FFFFFF;
-	padding: 10px 15px;
-	border-radius: 9px;
+.HomePage .Button {
+  font-family: 'Montserrat';
+  font-size: 100%;
+  font-weight: 400;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: solid #FFFFFF;
+  padding: 10px 15px;
+  border-radius: 9px;
 }
 
-.Button:hover{
-	color:#3A6168;
-	border: solid #3A6168;
+.Button:hover {
+  color: #3A6168;
+  border: solid #3A6168;
 }
-
 
 /*------Media Queries------*/
+
 @media screen and (max-width: 900px) {
-	.Content{
-		padding-bottom: 15%;
-	}
-	.Content h1{
-		font-size: 450%;
-	}
-	.Button{
-		font-size: 90%;
-	}
+  .Content {
+    padding-bottom: 15%;
+  }
+  .Content h1 {
+    font-size: 450%;
+  }
+  .Button {
+    font-size: 90%;
+  }
 }
+
 @media screen and (max-width: 768px) {
-	.Content{
-		padding-bottom: 13%;
-	}
-	.Content h1{
-		font-size: 400%;
-	}
-	.Button{
-		font-size: 80%;
-	}
+  .Content {
+    padding-bottom: 13%;
+  }
+  .Content h1 {
+    font-size: 400%;
+  }
+  .Button {
+    font-size: 80%;
+  }
 }
+
 @media screen and (max-width: 480px) {
-	.Content{
-		padding-bottom: 11%;
-	}
-	.Content h1{
-		font-size: 350%;
-	}
-	.Button{
-		font-size: 80%;
-	}
+  .Content {
+    padding-bottom: 11%;
+  }
+  .Content h1 {
+    font-size: 350%;
+  }
+  .Button {
+    font-size: 80%;
+  }
 }

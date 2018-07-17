@@ -22,6 +22,7 @@ $('#nodeInfo').hide(0);
 
 // global variables //
 var transmissionDelay = 0;
+var remissionDelay = 0;
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
@@ -50,7 +51,14 @@ var cy = cytoscape({
       selector: '.transmission_node',
       style: {
         'background-color': '#bc0101',
-        'line-color': '#bc0101',
+        'transition-property': 'background-color, line-color, target-arrow-color',
+        'transition-duration': '0.3s',
+      }
+    },
+    {
+      selector: '.remission_node',
+      style: {
+        'background-color': '#1eb0ff',
         'transition-property': 'background-color, line-color, target-arrow-color',
         'transition-duration': '0.3s',
       }
@@ -86,7 +94,7 @@ var cy = cytoscape({
   ]
 });
 
-// initializing infection graph //
+// initializing infection chart //
 Chart.defaults.global.defaultFontFamily = 'Oxygen';
 var ctx = document.getElementById("infectGraph").getContext('2d');
 var infectGraph = new Chart(ctx, {});
@@ -167,10 +175,15 @@ function contacttransmitGraph() {
           // checking for empty line or hashtag at the end of file //
           if (transmitArray[0].length == 0) {
             console.log('empty line');
-          } else if (transmitArray[0] === "None") {
+          }
+          // checking for initial infected nodes //
+          else if (transmitArray[0] === "None") {
             updateTransmitNode('#' + transmitArray[1], 0);
-          } else if (transmitArray[0] == transmitArray[1]) {
-            updateRemissionNode('#' + transmitArray[0]);
+          }
+          // checking if nodes are in remmission //
+          else if (transmitArray[0] == transmitArray[1]) {
+            remissionDelay = Math.ceil(transmitArray[2] * 500);
+            updateRemissionNode('#' + transmitArray[0], remissionDelay);
           }
           // checking if edge ID (Node1Node2) exists  //
           else if (cy.$('#' + transmitArray[0] + transmitArray[1]).length) {
@@ -210,6 +223,14 @@ function updateTransmitEdge(edgeID, delay) {
   if (edgeID.length) {
     window.setTimeout(function() {
       cy.$(edgeID).classes('transmission_edge');
+    }, delay);
+  }
+}
+
+function updateRemissionNode(nodeID, delay) {
+  if (nodeID.length) {
+    window.setTimeout(function() {
+      cy.$(nodeID).classes('remission_node');
     }, delay);
   }
 }
