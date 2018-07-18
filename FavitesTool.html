@@ -23,15 +23,19 @@
 <style>
 	body {
 		background-color: #132835;
+		height: 100%;
 		background-image: url("Images/navybluenetwork.png");
 	}
 
-	@import url('https://fonts.googleapis.com/css?family=Oxygen:300');
-
+.container{
+	display: table;
+	height: 100%;
+	width: 100%;
+}
 
 	#cy {
-		width: 100vh;
-		height: 100vh;
+		width: 100%;
+		height: 100%;
 		position: absolute;
 		left: 0vh;
 		bottom: 0vh;
@@ -81,12 +85,6 @@
 		left: 5vh;
 	}
 
-	.rect {
-		width: 50vh;
-		height: 50vh;
-		fill: #686868;
-	}
-
 	#right .topright {
 		position: absolute;
 	}
@@ -115,7 +113,7 @@
 
 <body>
 
-	<div id="container" style="width:100%; height:100%;z-index:-1;">
+	<section id="container">
 		<div id="inputFile1">Select a contact network file:
 			<input type="file" id="contactInput">
 		</div>
@@ -124,7 +122,7 @@
 		</div>
 		<div class="loader"></div>
 		<!--left-->
-		<div id="left" style="float:left; width:70%;">
+		<div id="left" style="display:table-cell; width:70%;">
 			<!-- mainGraph -->
 			<div id="cy"></div>
 			<div>
@@ -132,8 +130,7 @@
 			</div>
 		</div>
 		<!--Right-->
-		<div id="right" style="float:right; width:30%;">
-			<rect class="rect">
+		<div id="right" style="display:table-cell;width:30%;">
 				<div class="topright">
 					<ul id="nodeInfo"></ul>
 				</div>
@@ -143,9 +140,8 @@
 				<div class="bottomright" id="infectdiv">
 					<canvas id="infectGraph" width=480px height=270px></canvas>
 				</div>
-			</rect>
 		</div>
-	</div>
+	</section>
 
 	<!-- Cytoscape Graph Script -->
 	<script src="script.js"></script>
