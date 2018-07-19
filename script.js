@@ -32,7 +32,9 @@ var transmitDone = false;
 var infectData = [];
 var infectLabels = [];
 var remissionData = [];
+var animDuration = 0;
 var nodeInfo = [];
+var counter = 0;
 
 // Cytoscape initializing empty main contact/transmission graph //
 var cy = cytoscape({
@@ -120,7 +122,6 @@ function contacttransmitGraph() {
   // Reading FAVITES FILE //
   var contactInput = document.getElementById('contactInput');
   var transmissionInput = document.getElementById('transmissionInput');
-  var fileDisplayArea = document.getElementById('fileDisplayArea');
   // Contact Network file reading and displaying //
   contactInput.addEventListener('change', function(e) {
     var file = contactInput.files[0];
@@ -141,6 +142,12 @@ function contacttransmitGraph() {
                 id: contactArray[1]
               }
             });
+            if (contactArray[2] == '.') {
+              // node has no attributes
+              console.log('No Attributes for node: ' + contactArray[1]);
+            } else {
+              nodeInfo(contactArray[2]);
+            }
           }
           // ADDING EDGES //
           else if (contactArray[0] === "EDGE") {
@@ -173,9 +180,9 @@ function contacttransmitGraph() {
       $('#inputFile2').fadeOut("slow");
       var reader = new FileReader();
       reader.onload = function(e) {
-        var counter = 0;
         var remiCounter = 0;
         var transmitLines = reader.result.split("\n");
+        animDuration = transmitLines.length * 500;
         // iterating and plotting the transmission nodes //
         for (i = 0; i < transmitLines.length; i++) {
           counter = counter + 1;
@@ -193,9 +200,9 @@ function contacttransmitGraph() {
           // checking if nodes are in remmission //
           else if (transmitArray[0] == transmitArray[1]) {
             remiCounter = remiCounter + 1;
+            infectData.pop();
+            infectLabels.pop();
             remissionData.push(remiCounter);
-            infectData.pop(); // removing nodes in remission from infection graph
-            infectData.push(0);
             remissionDelay = Math.ceil(transmitArray[2] * 500);
             updateRemissionNode('#' + transmitArray[0], remissionDelay);
           }
@@ -251,9 +258,10 @@ function updateRemissionNode(nodeID, delay) {
 }
 
 // individual node tree view //
-function nodeTreeView(nodeTreeID, infectdata) {
+function nodeTreeView(nodeTreeID) {
   if (transmitDone == true) {
     if (nodeSelectMode == false) {
+      console.log(infectData);
       nodeSelectMode = true;
       showGraphmode = true;
       nodeTreeElements = cy.$('#' + nodeTreeID).closedNeighborhood();
@@ -281,7 +289,7 @@ function nodeTreeView(nodeTreeID, infectdata) {
           }
         }
       });
-      showCharts(infectdata);
+      showMainCharts();
       //Resetting the graph when back button is pressed //
       backbtn.addEventListener('click', function() {
         notNodeTree.toggleClass('notNeighborhood', false);
@@ -291,7 +299,6 @@ function nodeTreeView(nodeTreeID, infectdata) {
         hideCharts();
         $('#backbtn').hide(0);
         $('#nodeInfo').hide(0);
-
       });
     }
   } else {
@@ -299,9 +306,14 @@ function nodeTreeView(nodeTreeID, infectdata) {
   }
 }
 
+function nodeInfo(attributes) {
+  nodeInfo = attributes.split(',');
+  console.log(nodeInfo);
+}
 
-function showCharts(infectdata, animDuration) {
+function showMainCharts() {
   if (showGraphmode == true) {
+    Chart.defaults.global.animation.duration = animDuration;
     // adding the newly acquired data to show the graph //
     infectGraph = new Chart(ctx, {
       type: 'line',
@@ -313,7 +325,7 @@ function showCharts(infectdata, animDuration) {
           label: 'People Infected',
           data: infectData,
           borderColor: "#bc0101",
-          backgroundColor:"#bc0101",
+          backgroundColor: "#bc0101",
           fill: true
         }]
       },
@@ -329,6 +341,11 @@ function showCharts(infectdata, animDuration) {
             scaleLabel: {
               display: true,
               labelString: 'Time'
+            },
+            ticks: {
+              callback: function(label, index, labels) {
+                return label ? label : '';
+              }
             }
           }]
         }
@@ -344,7 +361,7 @@ function showCharts(infectdata, animDuration) {
           label: 'People in Remission',
           data: remissionData,
           borderColor: "#00ddff",
-          backgroundColor:"#00ddff",
+          backgroundColor: "#00ddff",
           fill: true
         }]
       },
@@ -360,6 +377,11 @@ function showCharts(infectdata, animDuration) {
             scaleLabel: {
               display: true,
               labelString: 'Time'
+            },
+            tick: {
+              callback: function(label, index, labels) {
+                return label ? label : '';
+              }
             }
           }]
         }
