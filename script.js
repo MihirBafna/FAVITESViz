@@ -22,16 +22,17 @@ $('#nodeInfo').hide(0);
 
 // global variables //
 var transmissionDelay = 0;
-var remissionDelay = 0;
+var curedDelay = 0;
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
 var nodeSelectMode = false;
-var showGraphmode = false;
+var showIndividualMode = false;
+var showMainmode = false;
 var transmitDone = false;
 var infectData = [];
 var infectLabels = [];
-var remissionData = [];
+var curedData = [];
 var animDuration = 0;
 var nodeInfo = [];
 var counter = 0;
@@ -59,7 +60,7 @@ var cy = cytoscape({
       }
     },
     {
-      selector: '.remission_node',
+      selector: '.cured_node',
       style: {
         'background-color': '#00ddff',
         'transition-property': 'background-color, line-color, target-arrow-color',
@@ -102,9 +103,9 @@ Chart.defaults.global.defaultFontFamily = 'Oxygen';
 var ctx = document.getElementById("infectGraph").getContext('2d');
 var infectGraph = new Chart(ctx, {});
 
-// initializing remission chart //
-var ctx2 = document.getElementById("remissionGraph").getContext('2d');
-var remissionGraph = new Chart(ctx2, {});
+// initializing cured chart //
+var ctx2 = document.getElementById("curedGraph").getContext('2d');
+var curedGraph = new Chart(ctx2, {});
 
 /*--------------------------- Function Definitions ---------------------------*/
 
@@ -180,7 +181,7 @@ function contacttransmitGraph() {
       $('#inputFile2').fadeOut("slow");
       var reader = new FileReader();
       reader.onload = function(e) {
-        var remiCounter = 0;
+        var cureCounter = 0;
         var transmitLines = reader.result.split("\n");
         animDuration = transmitLines.length * 500;
         // iterating and plotting the transmission nodes //
@@ -199,12 +200,12 @@ function contacttransmitGraph() {
           }
           // checking if nodes are in remmission //
           else if (transmitArray[0] == transmitArray[1]) {
-            remiCounter = remiCounter + 1;
+            cureCounter = cureCounter + 1;
             infectData.pop();
             infectLabels.pop();
-            remissionData.push(remiCounter);
-            remissionDelay = Math.ceil(transmitArray[2] * 500);
-            updateRemissionNode('#' + transmitArray[0], remissionDelay);
+            curedData.push(cureCounter);
+            curedDelay = Math.ceil(transmitArray[2] * 500);
+            updatecuredNode('#' + transmitArray[0], curedDelay);
           }
           // checking if edge ID (Node1Node2) exists  //
           else if (cy.$('#' + transmitArray[0] + transmitArray[1]).length) {
@@ -224,7 +225,12 @@ function contacttransmitGraph() {
           }
         }
         //checking if transmission is done //
-        transmitDone = true;
+        if (counter>=transmitLines.length) {
+          showMainmode = true;
+          showIndividualMode = false;
+          transmitDone = true;
+          showMainCharts()
+        }
       }
       reader.readAsText(file);
     }
@@ -249,10 +255,10 @@ function updateTransmitEdge(edgeID, delay) {
   }
 }
 
-function updateRemissionNode(nodeID, delay) {
+function updatecuredNode(nodeID, delay) {
   if (nodeID.length) {
     window.setTimeout(function() {
-      cy.$(nodeID).classes('remission_node');
+      cy.$(nodeID).classes('cured_node');
     }, delay);
   }
 }
@@ -261,9 +267,10 @@ function updateRemissionNode(nodeID, delay) {
 function nodeTreeView(nodeTreeID) {
   if (transmitDone == true) {
     if (nodeSelectMode == false) {
-      console.log(infectData);
       nodeSelectMode = true;
-      showGraphmode = true;
+      showIndividualMode = true;
+      showMainmode = false;
+      showIndividualCharts();
       nodeTreeElements = cy.$('#' + nodeTreeID).closedNeighborhood();
       notNodeTree = cy.elements().not(nodeTreeElements);
       notNodeTree.toggleClass('notNeighborhood', true);
@@ -289,14 +296,14 @@ function nodeTreeView(nodeTreeID) {
           }
         }
       });
-      showMainCharts();
       //Resetting the graph when back button is pressed //
       backbtn.addEventListener('click', function() {
         notNodeTree.toggleClass('notNeighborhood', false);
         nodeTreeElements.toggleClass('Neighborhood', false);
-        showGraphmode = false;
+        showIndividualMode = false;
         nodeSelectMode = false;
-        hideCharts();
+        showMainmode = true;
+        showMainCharts();
         $('#backbtn').hide(0);
         $('#nodeInfo').hide(0);
       });
@@ -312,8 +319,7 @@ function nodeInfo(attributes) {
 }
 
 function showMainCharts() {
-  if (showGraphmode == true) {
-    Chart.defaults.global.animation.duration = animDuration;
+  if (showMainmode == true && showIndividualMode == false) {
     // adding the newly acquired data to show the graph //
     infectGraph = new Chart(ctx, {
       type: 'line',
@@ -334,7 +340,7 @@ function showMainCharts() {
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: '# of Infected'
+              labelString: '# Infected'
             }
           }],
           xAxes: [{
@@ -351,15 +357,15 @@ function showMainCharts() {
         }
       }
     });
-    remissionGraph = new Chart(ctx2, {
+    curedGraph = new Chart(ctx2, {
       type: 'line',
       data: {
         labels: infectLabels,
         xAxisID: 'Time',
-        yAxisID: 'Remission',
+        yAxisID: 'cured',
         datasets: [{
-          label: 'People in Remission',
-          data: remissionData,
+          label: 'People Cured',
+          data: curedData,
           borderColor: "#00ddff",
           backgroundColor: "#00ddff",
           fill: true
@@ -370,7 +376,7 @@ function showMainCharts() {
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: '# in Remission'
+              labelString: '# Cured'
             }
           }],
           xAxes: [{
@@ -390,10 +396,88 @@ function showMainCharts() {
   }
 }
 
-function hideCharts() {
-  if (showGraphmode == false) {
+function showIndividualCharts() {
+  if (showIndividualMode == true && showMainmode == false) {
+    // adding the newly acquired data to show the graph //
+    infectGraph = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: infectLabels,
+        xAxisID: 'Time',
+        yAxisID: 'Infected',
+        datasets: [{
+          label: 'People Infected',
+          data: [0,0,0,0,0,10],
+          borderColor: "#bc0101",
+          backgroundColor: "#bc0101",
+          fill: true
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: '# Infected'
+            }
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            },
+            ticks: {
+              callback: function(label, index, labels) {
+                return label ? label : '';
+              }
+            }
+          }]
+        }
+      }
+    });
+    curedGraph = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: infectLabels,
+        xAxisID: 'Time',
+        yAxisID: 'cured',
+        datasets: [{
+          label: 'People Cured',
+          data: [0,0,0,0,0,10],
+          borderColor: "#00ddff",
+          backgroundColor: "#00ddff",
+          fill: true
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: '# Cured'
+            }
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            },
+            tick: {
+              callback: function(label, index, labels) {
+                return label ? label : '';
+              }
+            }
+          }]
+        }
+      }
+    });
+  }
+}
+
+function hideMainCharts() {
+  if (showMainmode == false && showIndividualMode == false) {
     // changing both graph data to null (to hide) //
     infectGraph = new Chart(ctx, {});
-    remissionGraph = new Chart(ctx2, {});
+    curedGraph = new Chart(ctx2, {});
   }
 }
