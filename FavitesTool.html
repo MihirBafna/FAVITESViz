@@ -15,6 +15,7 @@
 	<!-- coSE-Bilkent Layout reference -->
 	<script src='websitereference/js/cytoscape-cose-bilkent.js'></script>
 	<!-- extra website metadata -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" type="image/png" href="Images/Favicon.png">
 	<link href="https://fonts.googleapis.com/css?family=Oxygen:300" rel="stylesheet">
@@ -23,23 +24,14 @@
 <style>
 	body {
 		background-color: #132835;
-		height: 100%;
+		height: 100vh;
+		width: 100vw;
 		background-image: url("Images/navybluenetwork.png");
 	}
 
-.container{
-	display: table;
-	height: 100%;
-	width: 100%;
-}
-
-	#cy {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		left: 0vh;
-		bottom: 0vh;
-		z-index: -1;
+	#inputlayout {
+		height: 5vh;
+		width: 100vw;
 	}
 
 	#inputFile1 {
@@ -58,6 +50,22 @@
 
 	#transmissionInput {
 		padding-top: 1vh;
+	}
+
+	#container {
+		display: -webkit-flex;
+		display: flex;
+		height: 100vh;
+		width: 100vw;
+	}
+
+	#cy {
+		width: 100%;
+		height: 100%;
+		position: relative;
+		left: 0vh;
+		bottom: 0vh;
+		z-index: 0;
 	}
 
 	#backbtn {
@@ -85,44 +93,64 @@
 		left: 5vh;
 	}
 
-	#right .topright {
-		position: absolute;
+	#left {
+		position: relative;
+		flex: 7;
+		/* height:70vh; */
 	}
 
-	.topright #nodeInfo {
+	#right {
+		flex: 3;
+		position: relative;
+		right: 5px;
+	}
+
+	.topright {
+		height: 30%;
+		position: relative;
+	}
+
+	#nodeInfo {
 		list-style-type: none;
+		height: 30%;
 	}
 
-	#right .bottomright {
-		position: absolute;
-		bottom: 5px;
-		right: 5px;
+	.bottomright {
+		height: 30%;
+		position: relative;
 	}
 
-	.bottomright #infectGraph {}
-
-	#right .middleright {
-		position: absolute;
-		bottom: 300px;
-		right: 5px;
+	#infectGraph {
+		position: relative;
+		height: 30%;
 	}
 
-	.middleright #curedGraph {}
+	.middleright {
+		position: relative;
+		height: 30%;
+		padding-bottom: 2vh;
+	}
+
+	#curedGraph {
+		position: relative;
+		height: 30%;
+	}
 </style>
 
 
 <body>
-
-	<section id="container">
+	<div id="inputlayout">
 		<div id="inputFile1">Select a contact network file:
 			<input type="file" id="contactInput">
 		</div>
 		<div id="inputFile2">Select a transmission network file:
 			<input type="file" id="transmissionInput">
 		</div>
+	</div>
+	<section id="container">
 		<div class="loader"></div>
 		<!--left-->
-		<div id="left" style="display:table-cell; width:70%;">
+		<div id="left">
 			<!-- mainGraph -->
 			<div id="cy"></div>
 			<div>
@@ -130,16 +158,16 @@
 			</div>
 		</div>
 		<!--Right-->
-		<div id="right" style="display:table-cell;width:30%;">
-				<div class="topright">
-					<ul id="nodeInfo"></ul>
-				</div>
-				<div class="middleright" id="cureddiv">
-					<canvas id="curedGraph" width=480px height=270px></canvas>
-				</div>
-				<div class="bottomright" id="infectdiv">
-					<canvas id="infectGraph" width=480px height=270px></canvas>
-				</div>
+		<div id="right">
+			<div class="topright">
+				<ul id="nodeInfo"></ul>
+			</div>
+			<div class="middleright" id="cureddiv">
+				<canvas id="curedGraph"></canvas>
+			</div>
+			<div class="bottomright" id="infectdiv">
+				<canvas id="infectGraph"></canvas>
+			</div>
 		</div>
 	</section>
 

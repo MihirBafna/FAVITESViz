@@ -225,7 +225,7 @@ function contacttransmitGraph() {
           }
         }
         //checking if transmission is done //
-        if (counter>=transmitLines.length) {
+        if (counter >= transmitLines.length) {
           showMainmode = true;
           showIndividualMode = false;
           transmitDone = true;
@@ -328,7 +328,7 @@ function showMainCharts() {
         xAxisID: 'Time',
         yAxisID: 'Infected',
         datasets: [{
-          label: 'People Infected',
+          label: 'Infected',
           data: infectData,
           borderColor: "#bc0101",
           backgroundColor: "#bc0101",
@@ -364,7 +364,7 @@ function showMainCharts() {
         xAxisID: 'Time',
         yAxisID: 'cured',
         datasets: [{
-          label: 'People Cured',
+          label: 'Cured',
           data: curedData,
           borderColor: "#00ddff",
           backgroundColor: "#00ddff",
@@ -407,7 +407,7 @@ function showIndividualCharts() {
         yAxisID: 'Infected',
         datasets: [{
           label: 'People Infected',
-          data: [0,0,0,0,0,10],
+          data: [0, 0, 0, 0, 0, 10],
           borderColor: "#bc0101",
           backgroundColor: "#bc0101",
           fill: true
@@ -443,7 +443,7 @@ function showIndividualCharts() {
         yAxisID: 'cured',
         datasets: [{
           label: 'People Cured',
-          data: [0,0,0,0,0,10],
+          data: [0, 0, 0, 0, 0, 10],
           borderColor: "#00ddff",
           backgroundColor: "#00ddff",
           fill: true
