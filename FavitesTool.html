@@ -68,6 +68,26 @@
 		z-index: 0;
 	}
 
+	#animationBtn {
+		height: 50px;
+		width: 50px;
+		background-image: url('Images/playbutton.png');
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border: 0;
+		background-color: Transparent;
+	}
+
+	#animationBtn:hover {
+		background-image: url('Images/playbuttonblue.png');
+		height: 50px;
+		width: 50px;
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border: 0;
+		background-color: Transparent;
+	}
+
 	#backbtn {
 		position: fixed;
 		height: 50px;
@@ -146,6 +166,7 @@
 		<div id="inputFile2">Select a transmission network file:
 			<input type="file" id="transmissionInput">
 		</div>
+		<button type="button" id="animationBtn"></button>
 	</div>
 	<section id="container">
 		<div class="loader"></div>

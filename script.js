@@ -19,6 +19,7 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 // hiding elements upon initialization //
 $('#backbtn').hide(0);
 $('#nodeInfo').hide(0);
+$('#animationBtn').hide(0);
 
 // global variables //
 var transmissionDelay = 0;
@@ -179,6 +180,7 @@ function contacttransmitGraph() {
     var textType = /text.*/;
     if (file.type.match(textType)) {
       $('#inputFile2').fadeOut("slow");
+      $('#animationBtn').show(0);
       var reader = new FileReader();
       reader.onload = function(e) {
         var cureCounter = 0;
@@ -480,4 +482,8 @@ function hideMainCharts() {
     infectGraph = new Chart(ctx, {});
     curedGraph = new Chart(ctx2, {});
   }
+}
+
+function playAnimation(){
+
 }
