@@ -68,7 +68,7 @@
 		z-index: 0;
 	}
 
-	#animationBtn {
+	.animationBtn {
 		height: 50px;
 		width: 50px;
 		background-image: url('Images/playbutton.png');
@@ -78,10 +78,30 @@
 		background-color: Transparent;
 	}
 
-	#animationBtn:hover {
+	.animationBtn:hover {
 		background-image: url('Images/playbuttonblue.png');
 		height: 50px;
 		width: 50px;
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border: 0;
+		background-color: Transparent;
+	}
+
+	.animationBtnPause {
+		height: 50px;
+		width: 50px;
+		background-image: url('Images/pausebutton.png');
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border: 0;
+		background-color: Transparent;
+	}
+
+	.animationBtnPause:hover {
+		height: 50px;
+		width: 50px;
+		background-image: url('Images/pausebuttonblue.png');
 		background-repeat: no-repeat;
 		background-size: 100%;
 		border: 0;
@@ -166,7 +186,7 @@
 		<div id="inputFile2">Select a transmission network file:
 			<input type="file" id="transmissionInput">
 		</div>
-		<button type="button" id="animationBtn"></button>
+		<button type="button" id="animationBtn" class = "animationBtn"></button>
 	</div>
 	<section id="container">
 		<div class="loader"></div>

@@ -18,7 +18,6 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 
 // hiding elements upon initialization //
 $('#backbtn').hide(0);
-$('#nodeInfo').hide(0);
 $('#animationBtn').hide(0);
 
 // global variables //
@@ -49,7 +48,8 @@ var cy = cytoscape({
       selector: 'node',
       style: {
         'width': '30',
-        'height': '30'
+        'height': '30',
+        'background-color': '#a0a2a5'
       }
     },
     {
@@ -73,6 +73,7 @@ var cy = cytoscape({
       style: {
         'width': 0.3,
         'curve-style': 'bezier',
+        'line-color': '#a0a2a5',
         'target-arrow-color': '#8c8c8c'
       }
     },
@@ -88,12 +89,15 @@ var cy = cytoscape({
     // nodetree style for nodes/edges //
     {
       selector: '.Neighborhood',
-      style: {},
+      style: {
+      },
     },
     {
       selector: '.notNeighborhood',
       style: {
         'visibility': 'hidden',
+        'line-color': '#a0a2a5',
+        'background-color': '#a0a2a5'
       }
     },
   ]
@@ -112,6 +116,8 @@ var curedGraph = new Chart(ctx2, {});
 
 // Main function //
 window.onload = function() {
+  var playbutton = document.getElementById('animationBtn');
+  playbutton.addEventListener("click", playAnimation());
   contacttransmitGraph();
   cy.on('click', 'node', function() {
     nodeID = this.id();
@@ -180,9 +186,9 @@ function contacttransmitGraph() {
     var textType = /text.*/;
     if (file.type.match(textType)) {
       $('#inputFile2').fadeOut("slow");
-      $('#animationBtn').show(0);
       var reader = new FileReader();
       reader.onload = function(e) {
+        $('#animationBtn').show(0);
         var cureCounter = 0;
         var transmitLines = reader.result.split("\n");
         animDuration = transmitLines.length * 500;
@@ -231,6 +237,7 @@ function contacttransmitGraph() {
           showMainmode = true;
           showIndividualMode = false;
           transmitDone = true;
+          hideCharts();
           showMainCharts()
         }
       }
@@ -269,16 +276,17 @@ function updatecuredNode(nodeID, delay) {
 function nodeTreeView(nodeTreeID) {
   if (transmitDone == true) {
     if (nodeSelectMode == false) {
+      $('#animationBtn').hide(0);
       nodeSelectMode = true;
       showIndividualMode = true;
       showMainmode = false;
+      hideCharts();
       showIndividualCharts();
       nodeTreeElements = cy.$('#' + nodeTreeID).closedNeighborhood();
       notNodeTree = cy.elements().not(nodeTreeElements);
       notNodeTree.toggleClass('notNeighborhood', true);
       nodeTreeElements.toggleClass('Neighborhood', true);
       $('#backbtn').show(0);
-      $('#nodeInfo').show(0);
       // new layout //
       cy.center(nodeID);
       // Qtip code for each node//
@@ -300,14 +308,15 @@ function nodeTreeView(nodeTreeID) {
       });
       //Resetting the graph when back button is pressed //
       backbtn.addEventListener('click', function() {
+        $('#animationBtn').show(0);
         notNodeTree.toggleClass('notNeighborhood', false);
         nodeTreeElements.toggleClass('Neighborhood', false);
         showIndividualMode = false;
         nodeSelectMode = false;
         showMainmode = true;
+        hideCharts();
         showMainCharts();
         $('#backbtn').hide(0);
-        $('#nodeInfo').hide(0);
       });
     }
   } else {
@@ -476,14 +485,14 @@ function showIndividualCharts() {
   }
 }
 
-function hideMainCharts() {
-  if (showMainmode == false && showIndividualMode == false) {
+function hideCharts() {
     // changing both graph data to null (to hide) //
     infectGraph = new Chart(ctx, {});
     curedGraph = new Chart(ctx2, {});
-  }
 }
 
-function playAnimation(){
-
+function playAnimation() {
+  if (transmitDone == true) {
+    $('#animationBtn').toggleClass('animationBtnPause', true);
+  }
 }
