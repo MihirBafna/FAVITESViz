@@ -26,6 +26,7 @@ var curedDelay = 0;
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
+var playtransmission = false;
 var nodeSelectMode = false;
 var showIndividualMode = false;
 var showMainmode = false;
@@ -89,8 +90,7 @@ var cy = cytoscape({
     // nodetree style for nodes/edges //
     {
       selector: '.Neighborhood',
-      style: {
-      },
+      style: {},
     },
     {
       selector: '.notNeighborhood',
@@ -116,13 +116,12 @@ var curedGraph = new Chart(ctx2, {});
 
 // Main function //
 window.onload = function() {
-  var playbutton = document.getElementById('animationBtn');
-  playbutton.addEventListener("click", playAnimation());
   contacttransmitGraph();
   cy.on('click', 'node', function() {
     nodeID = this.id();
     nodeTreeView(nodeID);
   });
+  playAnimation();
 };
 
 // Initializing the graph with both contact and transmission network files //
@@ -135,7 +134,7 @@ function contacttransmitGraph() {
     var file = contactInput.files[0];
     var textType = /text.*/;
     if (file.type.match(textType)) {
-      $('#inputFile1').fadeOut("slow");
+      $('#inputFile1').hide(300);
       var reader = new FileReader();
       reader.onload = function(e) {
         var contactLines = reader.result.split("\n");
@@ -185,10 +184,9 @@ function contacttransmitGraph() {
     var file = transmissionInput.files[0];
     var textType = /text.*/;
     if (file.type.match(textType)) {
-      $('#inputFile2').fadeOut("slow");
+      $('#inputFile2').hide(300);
       var reader = new FileReader();
       reader.onload = function(e) {
-        $('#animationBtn').show(0);
         var cureCounter = 0;
         var transmitLines = reader.result.split("\n");
         animDuration = transmitLines.length * 500;
@@ -237,6 +235,8 @@ function contacttransmitGraph() {
           showMainmode = true;
           showIndividualMode = false;
           transmitDone = true;
+          playtransmission = true;
+          $('#animationBtn').delay(500).show(300);
           hideCharts();
           showMainCharts()
         }
@@ -276,7 +276,7 @@ function updatecuredNode(nodeID, delay) {
 function nodeTreeView(nodeTreeID) {
   if (transmitDone == true) {
     if (nodeSelectMode == false) {
-      $('#animationBtn').hide(0);
+      $('#animationBtn').hide(300);
       nodeSelectMode = true;
       showIndividualMode = true;
       showMainmode = false;
@@ -286,7 +286,7 @@ function nodeTreeView(nodeTreeID) {
       notNodeTree = cy.elements().not(nodeTreeElements);
       notNodeTree.toggleClass('notNeighborhood', true);
       nodeTreeElements.toggleClass('Neighborhood', true);
-      $('#backbtn').show(0);
+      $('#backbtn').show(300);
       // new layout //
       cy.center(nodeID);
       // Qtip code for each node//
@@ -308,7 +308,7 @@ function nodeTreeView(nodeTreeID) {
       });
       //Resetting the graph when back button is pressed //
       backbtn.addEventListener('click', function() {
-        $('#animationBtn').show(0);
+        $('#animationBtn').show(300);
         notNodeTree.toggleClass('notNeighborhood', false);
         nodeTreeElements.toggleClass('Neighborhood', false);
         showIndividualMode = false;
@@ -316,7 +316,7 @@ function nodeTreeView(nodeTreeID) {
         showMainmode = true;
         hideCharts();
         showMainCharts();
-        $('#backbtn').hide(0);
+        $('#backbtn').hide(300);
       });
     }
   } else {
@@ -486,13 +486,23 @@ function showIndividualCharts() {
 }
 
 function hideCharts() {
-    // changing both graph data to null (to hide) //
-    infectGraph = new Chart(ctx, {});
-    curedGraph = new Chart(ctx2, {});
+  // changing both graph data to null (to hide) //
+  infectGraph = new Chart(ctx, {});
+  curedGraph = new Chart(ctx2, {});
 }
 
 function playAnimation() {
-  if (transmitDone == true) {
-    $('#animationBtn').toggleClass('animationBtnPause', true);
-  }
+  var playbutton = $('#animationBtn');
+  playbutton.click(function() {
+    if (playtransmission == true) {
+      $('#animationBtn').toggleClass('playBtn', false);
+      $('#animationBtn').toggleClass('animationBtnPause', true);
+      playtransmission = false;
+    }
+    else if (playtransmission == false) {
+      $('#animationBtn').toggleClass('animationBtnPause', false);
+      $('#animationBtn').toggleClass('playBtn', true);
+      playtransmission = true;
+    }
+  });
 }
