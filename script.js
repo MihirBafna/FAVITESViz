@@ -2,7 +2,7 @@
 FAVITESViz is a tool for visualizing the output of FAVITES
 (FrAmework for VIral Transmission and Evolution Simulation)
 
-FAVITESViz was built mainly using the Cytoscape Library, as well as other
+FAVITESViz was built mainly using the Cytoscape.js Library, as well as other
 dependencies credited below.
 
 Dependencies:
@@ -19,6 +19,8 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 // hiding elements upon initialization //
 $('#backbtn').hide(0);
 $('#animationBtn').hide(0);
+$('#right').toggleClass('rightcolored', false);
+$('#right').toggleClass('rightinitial', true);
 
 // global variables //
 var transmissionDelay = 0;
@@ -26,6 +28,7 @@ var curedDelay = 0;
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
+var counter = 0;
 var playtransmission = false;
 var nodeSelectMode = false;
 var showIndividualMode = false;
@@ -35,8 +38,9 @@ var infectData = [];
 var infectLabels = [];
 var curedData = [];
 var animDuration = 0;
-var nodeInfo = [];
-var counter = 0;
+var nodeAttributes = null;
+var nodeInfoDictionary = {};
+
 
 // Cytoscape initializing empty main contact/transmission graph //
 var cy = cytoscape({
@@ -58,7 +62,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.3s',
+        'transition-duration': '0.1s',
       }
     },
     {
@@ -66,7 +70,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#00ddff',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.3s',
+        'transition-duration': '0.1s',
       }
     },
     {
@@ -83,7 +87,7 @@ var cy = cytoscape({
       style: {
         'line-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.3s',
+        'transition-duration': '0.1s',
         'width': '3',
       }
     },
@@ -141,6 +145,7 @@ function contacttransmitGraph() {
         // Iterating and adding each element to cytest graph //
         for (i = 0; i < contactLines.length; i++) {
           var contactArray = contactLines[i].split("\t");
+          nodeAttributes = contactArray[2];
           // ADDING NODES //
           if (contactArray[0] === "NODE") {
             cy.add({
@@ -151,9 +156,10 @@ function contacttransmitGraph() {
             });
             if (contactArray[2] == '.') {
               // node has no attributes
-              console.log('No Attributes for node: ' + contactArray[1]);
-            } else {
-              nodeInfo(contactArray[2]);
+            }
+            // getting the node info for infobox //
+            else {
+              makeInfoDictionary(contactArray[1], nodeAttributes);
             }
           }
           // ADDING EDGES //
@@ -185,6 +191,8 @@ function contacttransmitGraph() {
     var textType = /text.*/;
     if (file.type.match(textType)) {
       $('#inputFile2').hide(300);
+      $('#right').toggleClass('rightinitial', false);
+      $('#right').toggleClass('rightcolored', true);
       var reader = new FileReader();
       reader.onload = function(e) {
         var cureCounter = 0;
@@ -211,23 +219,25 @@ function contacttransmitGraph() {
             infectLabels.pop();
             curedData.push(cureCounter);
             curedDelay = Math.ceil(transmitArray[2] * 500);
-            updatecuredNode('#' + transmitArray[0], curedDelay);
+            updatecuredNode('#' + transmitArray[0], 0);
           }
           // checking if edge ID (Node1Node2) exists  //
           else if (cy.$('#' + transmitArray[0] + transmitArray[1]).length) {
             transmissionDelay = Math.ceil(transmitArray[2] * 500);
-            updateTransmitEdge('#' + transmitArray[0] + transmitArray[1], transmissionDelay);
-            updateTransmitNode('#' + transmitArray[1], transmissionDelay);
+            updateTransmitEdge('#' + transmitArray[0] + transmitArray[1], 0);
+            updateTransmitNode('#' + transmitArray[1], 0);
           }
           // checking if edge ID (Node2Node1) exists //
           else if (cy.$('#' + transmitArray[1] + transmitArray[0]).length) {
             transmissionDelay = Math.ceil(transmitArray[2] * 500);
-            updateTransmitEdge('#' + transmitArray[1] + transmitArray[0], transmissionDelay);
-            updateTransmitNode('#' + transmitArray[1], transmissionDelay);
+            updateTransmitEdge('#' + transmitArray[1] + transmitArray[0], 0);
+            updateTransmitNode('#' + transmitArray[1], 0);
           }
           // error message in case nodes/edges were not defined in the contact network (for developer usage) //
           else {
             console.log('The edge with ID ' + transmitArray[0] + transmitArray[1] + ' or ' + transmitArray[1] + transmitArray[0] + ' does not exist.');
+            infectData.pop();
+            curedData.pop();
           }
         }
         //checking if transmission is done //
@@ -246,7 +256,55 @@ function contacttransmitGraph() {
   })
 }
 
-/*---------- functions for user manipulation after graph initializes ---------*/
+/*---------- functions for user interaction after graph initializes ---------*/
+
+// dictionary that contains each node as a key and attributes as values //
+function makeInfoDictionary(nodeID, attributes) {
+  if (nodeID && attributes) {
+    nodeInfoDictionary[nodeID] = attributes;
+  }
+}
+
+function giveValuesofKey(nodeID){
+  if (nodeID){
+    return nodeInfoDictionary[nodeID];
+  }
+}
+
+// displaying node info (attributes) when user clicks on the respective node //
+function showNodeInfo(nodeID) {
+  if (nodeSelectMode == true) {
+    //creating title element that displays node id //
+    var h1 = document.getElementById('nodeName');
+    var id = document.createTextNode(nodeID+" :");
+    h1.appendChild(id);
+    // making bulleted list of attributes to be displayed //
+    var atr = giveValuesofKey(nodeID);
+    if (atr) {
+      var li = null;
+      var info = atr.split(",");
+      var bullet = null;
+      for (i = 0; i < info.length; i++) {
+        li = document.createElement("LI");
+        bullet = document.createTextNode(info[i]);
+        console.log(bullet);
+        li.appendChild(bullet);
+        console.log(li);
+        document.getElementById('attributes').appendChild(li);
+      }
+    }
+    else {
+      console.log("Node "+nodeID+" does not have any attributes");
+    }
+  }
+}
+
+function hidenodeInfo(nodeID) {
+  if (nodeSelectMode == false) {
+    $('#nodeName').empty(0);
+    $('#attributes').empty(0);
+  }
+}
 
 function updateTransmitNode(nodeID, delay) {
   if (nodeID.length) {
@@ -282,13 +340,14 @@ function nodeTreeView(nodeTreeID) {
       showMainmode = false;
       hideCharts();
       showIndividualCharts();
+      showNodeInfo(nodeTreeID);
       nodeTreeElements = cy.$('#' + nodeTreeID).closedNeighborhood();
       notNodeTree = cy.elements().not(nodeTreeElements);
       notNodeTree.toggleClass('notNeighborhood', true);
       nodeTreeElements.toggleClass('Neighborhood', true);
       $('#backbtn').show(300);
       // new layout //
-      cy.center(nodeID);
+      cy.center(nodeTreeID);
       // Qtip code for each node//
       cy.nodes().qtip({
         content: function() {
@@ -314,6 +373,7 @@ function nodeTreeView(nodeTreeID) {
         showIndividualMode = false;
         nodeSelectMode = false;
         showMainmode = true;
+        hidenodeInfo();
         hideCharts();
         showMainCharts();
         $('#backbtn').hide(300);
@@ -322,11 +382,6 @@ function nodeTreeView(nodeTreeID) {
   } else {
     alert('Transmission graph has not been uploaded');
   }
-}
-
-function nodeInfo(attributes) {
-  nodeInfo = attributes.split(',');
-  console.log(nodeInfo);
 }
 
 function showMainCharts() {
@@ -395,7 +450,7 @@ function showMainCharts() {
               display: true,
               labelString: 'Time'
             },
-            tick: {
+            ticks: {
               callback: function(label, index, labels) {
                 return label ? label : '';
               }
@@ -473,7 +528,7 @@ function showIndividualCharts() {
               display: true,
               labelString: 'Time'
             },
-            tick: {
+            ticks: {
               callback: function(label, index, labels) {
                 return label ? label : '';
               }
@@ -498,8 +553,7 @@ function playAnimation() {
       $('#animationBtn').toggleClass('playBtn', false);
       $('#animationBtn').toggleClass('animationBtnPause', true);
       playtransmission = false;
-    }
-    else if (playtransmission == false) {
+    } else if (playtransmission == false) {
       $('#animationBtn').toggleClass('animationBtnPause', false);
       $('#animationBtn').toggleClass('playBtn', true);
       playtransmission = true;

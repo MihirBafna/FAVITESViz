@@ -23,6 +23,8 @@
 
 <style>
 	body {
+		margin: 0;
+		padding: 0;
 		background-color: #132835;
 		height: 100vh;
 		width: 100vw;
@@ -30,16 +32,18 @@
 	}
 
 	#inputlayout {
-		height: 5vh;
-		width: 100vw;
+		height: 7vh;
+		width: 100%;
 	}
 
 	#inputFile1 {
+		padding-left: 1vh;
 		color: white;
 		font-family: Oxygen;
 	}
 
 	#inputFile2 {
+		padding-left: 1vh;
 		color: white;
 		font-family: Oxygen;
 	}
@@ -69,6 +73,8 @@
 	}
 
 	.playBtn {
+		top: 2vh;
+		left: 2vh;
 		height: 50px;
 		width: 50px;
 		background-image: url('Images/playbutton.png');
@@ -136,13 +142,21 @@
 	#left {
 		position: relative;
 		flex: 7;
-		/* height:70vh; */
 	}
 
 	#right {
 		flex: 3;
 		position: relative;
 		right: 5px;
+		height: 100%;
+	}
+
+	.rightinitial {
+		background-color: Transparent;
+	}
+
+	.rightcolored {
+		background-color: rgb(60, 60, 60, 0.3);
 	}
 
 	.topright {
@@ -151,8 +165,21 @@
 	}
 
 	#nodeInfo {
-		list-style-type: none;
+		padding-left: 1vh;
 		height: 30%;
+	}
+
+	#nodeName {
+		font-size: 1.0em;
+		text-decoration: underline;
+		color: white;
+		font-family: Oxygen;
+	}
+
+	#attributes {
+		color: white;
+		font-family: Oxygen;
+		list-style-type: circle;
 	}
 
 	.bottomright {
@@ -179,19 +206,19 @@
 
 
 <body>
-	<div id="inputlayout">
-		<div id="inputFile1">Select a contact network file:
-			<input type="file" id="contactInput">
-		</div>
-		<div id="inputFile2">Select a transmission network file:
-			<input type="file" id="transmissionInput">
-		</div>
-		<button type="button" id="animationBtn" class = "playBtn"></button>
-	</div>
 	<section id="container">
 		<div class="loader"></div>
 		<!--left-->
 		<div id="left">
+			<div id="inputlayout">
+				<div id="inputFile1">Select a contact network file:
+					<input type="file" id="contactInput">
+				</div>
+				<div id="inputFile2">Select a transmission network file:
+					<input type="file" id="transmissionInput">
+				</div>
+				<button type="button" id="animationBtn" class="playBtn"></button>
+			</div>
 			<!-- mainGraph -->
 			<div id="cy"></div>
 			<div>
@@ -199,9 +226,12 @@
 			</div>
 		</div>
 		<!--Right-->
-		<div id="right">
+		<div id="right" class="rightinitial">
 			<div class="topright">
-				<ul id="nodeInfo"></ul>
+				<div id="nodeInfo">
+					<h1 id="nodeName"></h1>
+					<ul id="attributes"></ul>
+				</div>
 			</div>
 			<div class="middleright" id="cureddiv">
 				<canvas id="curedGraph"></canvas>

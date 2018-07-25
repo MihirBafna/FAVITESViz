@@ -7,7 +7,7 @@ FAVITESViz is a tool for visualizing the output of FAVITES
 
 
 # Dependencies:
-FAVITESViz was built mainly using the Cytoscape Library, as well as other
+FAVITESViz was built mainly using the Cytoscape.js Library, as well as other
 dependencies credited below.
 
 - chart.js
