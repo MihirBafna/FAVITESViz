@@ -28,6 +28,8 @@ var curedDelay = 0;
 var nodeID = null;
 var nodeTreeElements = [];
 var notNodeTree = [];
+var edgeCounter = 0;
+var nodeCounter = 0;
 var counter = 0;
 var playtransmission = false;
 var nodeSelectMode = false;
@@ -62,7 +64,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.1s',
+        'transition-duration': '0s',
       }
     },
     {
@@ -70,7 +72,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#00ddff',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.1s',
+        'transition-duration': '0s',
       }
     },
     {
@@ -87,7 +89,7 @@ var cy = cytoscape({
       style: {
         'line-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.1s',
+        'transition-duration': '0s',
         'width': '3',
       }
     },
@@ -148,6 +150,7 @@ function contacttransmitGraph() {
           nodeAttributes = contactArray[2];
           // ADDING NODES //
           if (contactArray[0] === "NODE") {
+            nodeCounter++;
             cy.add({
               group: "nodes",
               data: {
@@ -164,6 +167,7 @@ function contacttransmitGraph() {
           }
           // ADDING EDGES //
           else if (contactArray[0] === "EDGE") {
+            edgeCounter++;
             cy.add({
               group: "edges",
               data: {
@@ -247,6 +251,7 @@ function contacttransmitGraph() {
           transmitDone = true;
           playtransmission = true;
           $('#animationBtn').delay(500).show(300);
+          showMainInfo();
           hideCharts();
           showMainCharts()
         }
@@ -271,6 +276,22 @@ function giveValuesofKey(nodeID){
   }
 }
 
+function showMainInfo(){
+  if(edgeCounter && nodeCounter >0){
+    var h1 = document.getElementById('nodeName');
+    var title = document.createTextNode('Main Network :');
+    h1.appendChild(title);
+    var li = document.createElement("LI");
+    var li2 = document.createElement("LI");
+    var nodes = document.createTextNode("# of Nodes: "+nodeCounter)
+    var edges = document.createTextNode("# of Edges: "+edgeCounter)
+    li.appendChild(nodes);
+    li2.appendChild(edges);
+    document.getElementById('attributes').appendChild(li);
+    document.getElementById('attributes').appendChild(li2);
+  }
+}
+
 // displaying node info (attributes) when user clicks on the respective node //
 function showNodeInfo(nodeID) {
   if (nodeSelectMode == true) {
@@ -287,15 +308,20 @@ function showNodeInfo(nodeID) {
       for (i = 0; i < info.length; i++) {
         li = document.createElement("LI");
         bullet = document.createTextNode(info[i]);
-        console.log(bullet);
         li.appendChild(bullet);
-        console.log(li);
         document.getElementById('attributes').appendChild(li);
       }
     }
     else {
       console.log("Node "+nodeID+" does not have any attributes");
     }
+  }
+}
+
+function hideMainInfo(nodeID) {
+  if (showMainmode == false) {
+    $('#nodeName').empty(0);
+    $('#attributes').empty(0);
   }
 }
 
@@ -338,6 +364,7 @@ function nodeTreeView(nodeTreeID) {
       nodeSelectMode = true;
       showIndividualMode = true;
       showMainmode = false;
+      hideMainInfo();
       hideCharts();
       showIndividualCharts();
       showNodeInfo(nodeTreeID);
@@ -376,6 +403,7 @@ function nodeTreeView(nodeTreeID) {
         hidenodeInfo();
         hideCharts();
         showMainCharts();
+        showMainInfo();
         $('#backbtn').hide(300);
       });
     }
