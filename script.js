@@ -66,7 +66,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.3s',
+        'transition-duration': '0.2s',
       }
     },
     {
@@ -74,7 +74,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#00ddff',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.3s',
+        'transition-duration': '0.2s',
       }
     },
     {
@@ -91,7 +91,7 @@ var cy = cytoscape({
       style: {
         'line-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.3s',
+        'transition-duration': '0.2s',
         'width': '3',
       }
     },
@@ -523,7 +523,7 @@ function showMainCharts() {
 
 function showIndividualCharts() {
   if (showIndividualMode == true && showMainmode == false) {
-    Chart.defaults.global.animation.duration = 200;
+    Chart.defaults.global.animation.duration = 750;
     // adding the newly acquired data to show the graph //
     infectGraph = new Chart(ctx, {
       type: 'line',
