@@ -39,8 +39,10 @@ var transmitDone = false;
 var infectData = [];
 var infectLabels = [];
 var curedData = [];
+var targdelay = [];
 var animDuration = 0;
 var nodeAttributes = null;
+var transmitDictionary = {};
 var nodeInfoDictionary = {};
 
 
@@ -127,7 +129,18 @@ window.onload = function() {
     nodeID = this.id();
     nodeTreeView(nodeID);
   });
-  playAnimation();
+  var playbutton = $('#animationBtn');
+  playbutton.click(function() {
+    if (playtransmission == true) {
+      $('#animationBtn').toggleClass('playBtn', false);
+      $('#animationBtn').toggleClass('animationBtnPause', true);
+      playAnimation();
+    } else if (playtransmission == false) {
+      $('#animationBtn').toggleClass('animationBtnPause', false);
+      $('#animationBtn').toggleClass('playBtn', true);
+      pauseAnimation();
+    }
+  });
 };
 
 // Initializing the graph with both contact and transmission network files //
@@ -204,10 +217,14 @@ function contacttransmitGraph() {
         animDuration = transmitLines.length * 500;
         // iterating and plotting the transmission nodes //
         for (i = 0; i < transmitLines.length; i++) {
-          counter = counter + 1;
           var transmitArray = transmitLines[i].split("\t");
           infectLabels.push(Math.ceil(transmitArray[2]));
           infectData.push(counter);
+          targdelay = [];
+          targdelay.push(transmitArray[0]);
+          targdelay.push(transmitArray[1]);
+          targdelay.push(transmitArray[2]);
+          counter = counter + 1;
           // checking for empty line or hashtag at the end of file //
           if (transmitArray[0].length == 0) {
             console.log('empty line');
@@ -215,6 +232,7 @@ function contacttransmitGraph() {
           // checking for initial infected nodes //
           else if (transmitArray[0] === "None") {
             updateTransmitNode('#' + transmitArray[1], 0);
+            makeTransmitDictionary(counter, targdelay);
           }
           // checking if nodes are in remmission //
           else if (transmitArray[0] == transmitArray[1]) {
@@ -224,18 +242,21 @@ function contacttransmitGraph() {
             curedData.push(cureCounter);
             curedDelay = Math.ceil(transmitArray[2] * 500);
             updatecuredNode('#' + transmitArray[0], 0);
+            makeTransmitDictionary(counter, targdelay);
           }
           // checking if edge ID (Node1Node2) exists  //
           else if (cy.$('#' + transmitArray[0] + transmitArray[1]).length) {
             transmissionDelay = Math.ceil(transmitArray[2] * 500);
             updateTransmitEdge('#' + transmitArray[0] + transmitArray[1], 0);
             updateTransmitNode('#' + transmitArray[1], 0);
+            makeTransmitDictionary(counter, targdelay);
           }
           // checking if edge ID (Node2Node1) exists //
           else if (cy.$('#' + transmitArray[1] + transmitArray[0]).length) {
             transmissionDelay = Math.ceil(transmitArray[2] * 500);
             updateTransmitEdge('#' + transmitArray[1] + transmitArray[0], 0);
             updateTransmitNode('#' + transmitArray[1], 0);
+            makeTransmitDictionary(counter, targdelay);
           }
           // error message in case nodes/edges were not defined in the contact network (for developer usage) //
           else {
@@ -251,6 +272,7 @@ function contacttransmitGraph() {
           transmitDone = true;
           playtransmission = true;
           $('#animationBtn').delay(500).show(300);
+          getChartInfo();
           showMainInfo();
           hideCharts();
           showMainCharts()
@@ -263,6 +285,12 @@ function contacttransmitGraph() {
 
 /*---------- functions for user interaction after graph initializes ---------*/
 
+function makeTransmitDictionary(counter, TSDarray) {
+  if (counter && TSDarray) {
+    transmitDictionary[counter] = TSDarray;
+  }
+}
+
 // dictionary that contains each node as a key and attributes as values //
 function makeInfoDictionary(nodeID, attributes) {
   if (nodeID && attributes) {
@@ -270,21 +298,15 @@ function makeInfoDictionary(nodeID, attributes) {
   }
 }
 
-function giveValuesofKey(nodeID){
-  if (nodeID){
-    return nodeInfoDictionary[nodeID];
-  }
-}
-
-function showMainInfo(){
-  if(edgeCounter && nodeCounter >0){
+function showMainInfo() {
+  if (edgeCounter && nodeCounter > 0) {
     var h1 = document.getElementById('nodeName');
     var title = document.createTextNode('Network Statistics :');
     h1.appendChild(title);
     var li = document.createElement("LI");
     var li2 = document.createElement("LI");
-    var nodes = document.createTextNode("# of Nodes: "+nodeCounter)
-    var edges = document.createTextNode("# of Edges: "+edgeCounter)
+    var nodes = document.createTextNode("# of Nodes: " + nodeCounter)
+    var edges = document.createTextNode("# of Edges: " + edgeCounter)
     li.appendChild(nodes);
     li2.appendChild(edges);
     document.getElementById('attributes').appendChild(li);
@@ -297,10 +319,10 @@ function showNodeInfo(nodeID) {
   if (nodeSelectMode == true) {
     //creating title element that displays node id //
     var h1 = document.getElementById('nodeName');
-    var id = document.createTextNode(nodeID+" :");
+    var id = document.createTextNode(nodeID + " :");
     h1.appendChild(id);
     // making bulleted list of attributes to be displayed //
-    var atr = giveValuesofKey(nodeID);
+    var atr = nodeInfoDictionary[nodeID];
     if (atr) {
       var li = null;
       var info = atr.split(",");
@@ -311,9 +333,8 @@ function showNodeInfo(nodeID) {
         li.appendChild(bullet);
         document.getElementById('attributes').appendChild(li);
       }
-    }
-    else {
-      console.log("Node "+nodeID+" does not have any attributes");
+    } else {
+      console.log("Node " + nodeID + " does not have any attributes");
     }
   }
 }
@@ -409,6 +430,12 @@ function nodeTreeView(nodeTreeID) {
     }
   } else {
     alert('Transmission graph has not been uploaded');
+  }
+}
+
+function getChartInfo(){
+  if (transmitDone == true){
+    
   }
 }
 
@@ -570,21 +597,54 @@ function showIndividualCharts() {
 
 function hideCharts() {
   // changing both graph data to null (to hide) //
-  infectGraph = new Chart(ctx, {});
-  curedGraph = new Chart(ctx2, {});
+  infectGraph.destroy();
+  curedGraph.destroy();
+}
+
+function redoNetwork() {
+  if (transmitDone == true) {
+    cy.$('.transmission_node').removeClass('transmission_node');
+    cy.$('.cured_node').removeClass('cured_node');
+    cy.$('.transmission_edge').removeClass('transmission_edge');
+    cy.$('.cured_edge').removeClass('cured_edge');
+  }
 }
 
 function playAnimation() {
-  var playbutton = $('#animationBtn');
-  playbutton.click(function() {
-    if (playtransmission == true) {
-      $('#animationBtn').toggleClass('playBtn', false);
-      $('#animationBtn').toggleClass('animationBtnPause', true);
-      playtransmission = false;
-    } else if (playtransmission == false) {
-      $('#animationBtn').toggleClass('animationBtnPause', false);
-      $('#animationBtn').toggleClass('playBtn', true);
-      playtransmission = true;
+  if (playtransmission == true) {
+    redoNetwork();
+    for (var key in transmitDictionary) {
+      transmitArray = transmitDictionary[key];
+      transmissionDelay = Math.ceil(transmitArray[2] * 750);
+      // checking for initial infected nodes //
+      if (transmitArray[0] === "None") {
+        updateTransmitNode('#' + transmitArray[1], 0);
+      }
+      // checking if nodes are in cured //
+      else if (transmitArray[0] == transmitArray[1]) {
+        updatecuredNode('#' + transmitArray[0], transmissionDelay);
+      }
+      // checking if edge ID (Node1Node2) exists  //
+      else if (cy.$('#' + transmitArray[0] + transmitArray[1]).length) {
+        updateTransmitEdge('#' + transmitArray[0] + transmitArray[1], transmissionDelay);
+        updateTransmitNode('#' + transmitArray[1], transmissionDelay);
+      }
+      // checking if edge ID (Node2Node1) exists //
+      else if (cy.$('#' + transmitArray[1] + transmitArray[0]).length) {
+        updateTransmitEdge('#' + transmitArray[1] + transmitArray[0], transmissionDelay);
+        updateTransmitNode('#' + transmitArray[1], transmissionDelay);
+      }
+      // error message in case nodes/edges were not defined in the contact network (for developer usage) //
+      else {
+        console.log('The edge with ID ' + transmitArray[0] + transmitArray[1] + ' or ' + transmitArray[1] + transmitArray[0] + ' does not exist.');
+      }
     }
-  });
+    playtransmission = false;
+  }
+}
+
+function pauseAnimation() {
+  if (playtransmission == false) {
+    playtransmission = true;
+  }
 }
