@@ -279,7 +279,7 @@ function giveValuesofKey(nodeID){
 function showMainInfo(){
   if(edgeCounter && nodeCounter >0){
     var h1 = document.getElementById('nodeName');
-    var title = document.createTextNode('Main Network :');
+    var title = document.createTextNode('Network Statistics :');
     h1.appendChild(title);
     var li = document.createElement("LI");
     var li2 = document.createElement("LI");
