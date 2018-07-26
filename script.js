@@ -66,7 +66,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0s',
+        'transition-duration': '0.3s',
       }
     },
     {
@@ -74,7 +74,7 @@ var cy = cytoscape({
       style: {
         'background-color': '#00ddff',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0s',
+        'transition-duration': '0.3s',
       }
     },
     {
@@ -91,7 +91,7 @@ var cy = cytoscape({
       style: {
         'line-color': '#bc0101',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0s',
+        'transition-duration': '0.3s',
         'width': '3',
       }
     },
@@ -272,7 +272,7 @@ function contacttransmitGraph() {
           transmitDone = true;
           playtransmission = true;
           $('#animationBtn').delay(500).show(300);
-          getChartInfo();
+          //getChartInfo();
           showMainInfo();
           hideCharts();
           showMainCharts()
@@ -433,9 +433,13 @@ function nodeTreeView(nodeTreeID) {
   }
 }
 
-function getChartInfo(){
-  if (transmitDone == true){
-    
+function getChartInfo() {
+  if (transmitDone == true) {
+    iter = 0;
+    for (var key in transmitDictionary) {
+      chartArray = transmitDictionary[key];
+      iter++;
+    }
   }
 }
 
@@ -452,7 +456,7 @@ function showMainCharts() {
           label: 'Infected',
           data: infectData,
           borderColor: "#bc0101",
-          backgroundColor: "#bc0101",
+          backgroundColor: "rgb(188, 1, 1, 0.5)",
           fill: true
         }]
       },
@@ -488,7 +492,7 @@ function showMainCharts() {
           label: 'Cured',
           data: curedData,
           borderColor: "#00ddff",
-          backgroundColor: "#00ddff",
+          backgroundColor: "rgb(0, 221, 255, 0.5)",
           fill: true
         }]
       },
@@ -519,6 +523,7 @@ function showMainCharts() {
 
 function showIndividualCharts() {
   if (showIndividualMode == true && showMainmode == false) {
+    Chart.defaults.global.animation.duration = 200;
     // adding the newly acquired data to show the graph //
     infectGraph = new Chart(ctx, {
       type: 'line',
@@ -530,7 +535,7 @@ function showIndividualCharts() {
           label: 'People Infected',
           data: [0, 0, 0, 0, 0, 10],
           borderColor: "#bc0101",
-          backgroundColor: "#bc0101",
+          backgroundColor: "rgb(188, 1, 1, 0.5)",
           fill: true
         }]
       },
@@ -566,7 +571,7 @@ function showIndividualCharts() {
           label: 'People Cured',
           data: [0, 0, 0, 0, 0, 10],
           borderColor: "#00ddff",
-          backgroundColor: "#00ddff",
+          backgroundColor: "rgb(0, 221, 255, 0.5)",
           fill: true
         }]
       },
@@ -612,6 +617,9 @@ function redoNetwork() {
 
 function playAnimation() {
   if (playtransmission == true) {
+    Chart.defaults.global.animation.duration = counter * 750;
+    hideCharts();
+    showMainCharts();
     redoNetwork();
     for (var key in transmitDictionary) {
       transmitArray = transmitDictionary[key];
