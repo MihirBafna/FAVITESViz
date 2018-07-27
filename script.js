@@ -36,6 +36,7 @@ var nodeSelectMode = false;
 var showIndividualMode = false;
 var showMainmode = false;
 var transmitDone = false;
+var animationDone = false;
 var infectData = [];
 var infectLabels = [];
 var curedData = [];
@@ -132,13 +133,15 @@ window.onload = function() {
   var playbutton = $('#animationBtn');
   playbutton.click(function() {
     if (playtransmission == true) {
-      $('#animationBtn').toggleClass('playBtn', false);
-      $('#animationBtn').toggleClass('animationBtnPause', true);
-      playAnimation();
+      playbutton.toggleClass('playBtn', false);
+      playbutton.toggleClass('animationBtnPause', true);
+      toggleAnimation();
+      playtransmission = false;
     } else if (playtransmission == false) {
-      $('#animationBtn').toggleClass('animationBtnPause', false);
-      $('#animationBtn').toggleClass('playBtn', true);
-      pauseAnimation();
+      playbutton.toggleClass('animationBtnPause', false);
+      playbutton.toggleClass('playBtn', true);
+      toggleAnimation();
+      playtransmission = true;
     }
   });
 };
@@ -615,12 +618,18 @@ function redoNetwork() {
   }
 }
 
-function playAnimation() {
-  if (playtransmission == true) {
-    Chart.defaults.global.animation.duration = counter * 750;
+function toggleAnimation() {
+  if (transmitDone == true) {
+    if (playtransmission == true){
+      Chart.defaults.global.animation.duration = counter * 750;
+    }
+    else if(playtransmission == false){
+      Chart.defaults.global.animation.duration = 500;
+    }
     hideCharts();
     showMainCharts();
     redoNetwork();
+    animationDone = true;
     for (var key in transmitDictionary) {
       transmitArray = transmitDictionary[key];
       transmissionDelay = Math.ceil(transmitArray[2] * 750);
@@ -629,30 +638,31 @@ function playAnimation() {
         updateTransmitNode('#' + transmitArray[1], 0);
       }
       // checking if nodes are in cured //
-      else if (transmitArray[0] == transmitArray[1]) {
+      else if (transmitArray[0] == transmitArray[1] && playtransmission == true) {
         updatecuredNode('#' + transmitArray[0], transmissionDelay);
+      } else if (transmitArray[0] == transmitArray[1] && playtransmission == false) {
+        updatecuredNode('#' + transmitArray[0], 0);
       }
       // checking if edge ID (Node1Node2) exists  //
-      else if (cy.$('#' + transmitArray[0] + transmitArray[1]).length) {
+      else if ((cy.$('#' + transmitArray[0] + transmitArray[1]).length) && playtransmission == true) {
         updateTransmitEdge('#' + transmitArray[0] + transmitArray[1], transmissionDelay);
         updateTransmitNode('#' + transmitArray[1], transmissionDelay);
+      } else if ((cy.$('#' + transmitArray[0] + transmitArray[1]).length) && playtransmission == false) {
+        updateTransmitEdge('#' + transmitArray[0] + transmitArray[1], 0);
+        updateTransmitNode('#' + transmitArray[1], 0);
       }
       // checking if edge ID (Node2Node1) exists //
-      else if (cy.$('#' + transmitArray[1] + transmitArray[0]).length) {
+      else if ((cy.$('#' + transmitArray[1] + transmitArray[0]).length) && playtransmission == true) {
         updateTransmitEdge('#' + transmitArray[1] + transmitArray[0], transmissionDelay);
         updateTransmitNode('#' + transmitArray[1], transmissionDelay);
+      } else if ((cy.$('#' + transmitArray[1] + transmitArray[0]).length) && playtransmission == false) {
+        updateTransmitEdge('#' + transmitArray[1] + transmitArray[0], 0);
+        updateTransmitNode('#' + transmitArray[1], 0);
       }
       // error message in case nodes/edges were not defined in the contact network (for developer usage) //
       else {
         console.log('The edge with ID ' + transmitArray[0] + transmitArray[1] + ' or ' + transmitArray[1] + transmitArray[0] + ' does not exist.');
       }
     }
-    playtransmission = false;
-  }
-}
-
-function pauseAnimation() {
-  if (playtransmission == false) {
-    playtransmission = true;
   }
 }
