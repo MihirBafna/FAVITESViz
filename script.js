@@ -21,6 +21,7 @@ $('#backbtn').hide(0);
 $('#animationBtn').hide(0);
 $('#right').toggleClass('rightcolored', false);
 $('#right').toggleClass('rightinitial', true);
+$('#menuBtn').hide(0);
 
 // global variables //
 var transmissionDelay = 0;
@@ -36,7 +37,6 @@ var nodeSelectMode = false;
 var showIndividualMode = false;
 var showMainmode = false;
 var transmitDone = false;
-var animationDone = false;
 var infectData = [];
 var infectLabels = [];
 var curedData = [];
@@ -130,7 +130,19 @@ window.onload = function() {
     nodeID = this.id();
     nodeTreeView(nodeID);
   });
+  var layoutButton = $('#layoutbutton');
   var playbutton = $('#animationBtn');
+  var closebutton = $('#closebutton');
+  layoutButton.click(function(){
+    if (transmitDone == true){
+      $('#layoutModal').fadeIn(300);
+    }
+  });
+  closebutton.click(function(){
+    if (transmitDone == true){
+      $('#layoutModal').fadeOut(300);
+    }
+  });
   playbutton.click(function() {
     if (playtransmission == true) {
       playbutton.toggleClass('playBtn', false);
@@ -151,6 +163,7 @@ function contacttransmitGraph() {
   // Reading FAVITES FILE //
   var contactInput = document.getElementById('contactInput');
   var transmissionInput = document.getElementById('transmissionInput');
+  var communitiesInput = document.getElementById('communitiesInput');
   // Contact Network file reading and displaying //
   contactInput.addEventListener('change', function(e) {
     var file = contactInput.files[0];
@@ -237,7 +250,7 @@ function contacttransmitGraph() {
             updateTransmitNode('#' + transmitArray[1], 0);
             makeTransmitDictionary(counter, targdelay);
           }
-          // checking if nodes are in remmission //
+          // checking if nodes is cured//
           else if (transmitArray[0] == transmitArray[1]) {
             cureCounter = cureCounter + 1;
             infectData.pop();
@@ -275,10 +288,28 @@ function contacttransmitGraph() {
           transmitDone = true;
           playtransmission = true;
           $('#animationBtn').delay(500).show(300);
+          $('#menuBtn').show(300);
           //getChartInfo();
           showMainInfo();
           hideCharts();
           showMainCharts()
+        }
+      }
+      reader.readAsText(file);
+    }
+  })
+  // community input for partitioning the contact network nodes and edges //
+  communitiesInput.addEventListener('change', function(e) {
+    var file = communitiesInput.files[0];
+    var textType = /text.*/;
+    if (file.type.match(textType)) {
+      $('#inputFile3').hide(300);
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var communitiesArray = reader.result;
+        // Iterating and adding each element to cytest graph //
+        for (i = 0; i < communitiesArray.length; i++) {
+
         }
       }
       reader.readAsText(file);
@@ -459,7 +490,7 @@ function showMainCharts() {
           label: 'Infected',
           data: infectData,
           borderColor: "#bc0101",
-          backgroundColor: "rgb(188, 1, 1, 0.5)",
+          backgroundColor: "rgb(188, 1, 1, 0.4)",
           fill: true
         }]
       },
@@ -495,7 +526,7 @@ function showMainCharts() {
           label: 'Cured',
           data: curedData,
           borderColor: "#00ddff",
-          backgroundColor: "rgb(0, 221, 255, 0.5)",
+          backgroundColor: "rgb(0, 221, 255, 0.4)",
           fill: true
         }]
       },
@@ -538,7 +569,7 @@ function showIndividualCharts() {
           label: 'People Infected',
           data: [0, 0, 0, 0, 0, 10],
           borderColor: "#bc0101",
-          backgroundColor: "rgb(188, 1, 1, 0.5)",
+          backgroundColor: "rgb(188, 1, 1, 0.4)",
           fill: true
         }]
       },
@@ -574,7 +605,7 @@ function showIndividualCharts() {
           label: 'People Cured',
           data: [0, 0, 0, 0, 0, 10],
           borderColor: "#00ddff",
-          backgroundColor: "rgb(0, 221, 255, 0.5)",
+          backgroundColor: "rgb(0, 221, 255, 0.4)",
           fill: true
         }]
       },
@@ -620,16 +651,14 @@ function redoNetwork() {
 
 function toggleAnimation() {
   if (transmitDone == true) {
-    if (playtransmission == true){
+    if (playtransmission == true) {
       Chart.defaults.global.animation.duration = counter * 750;
-    }
-    else if(playtransmission == false){
+    } else if (playtransmission == false) {
       Chart.defaults.global.animation.duration = 500;
     }
     hideCharts();
     showMainCharts();
     redoNetwork();
-    animationDone = true;
     for (var key in transmitDictionary) {
       transmitArray = transmitDictionary[key];
       transmissionDelay = Math.ceil(transmitArray[2] * 750);

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Muli:300');
 @import url('https://fonts.googleapis.com/css?family=Raleway:300');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:300');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400');
 /*------Resetting any automatic margin and padding settings------*/
 
@@ -70,6 +71,14 @@ html, body {
   border: solid #3A6168;
 }
 
+h3 {
+  font-family: Oxygen;
+  color: white;
+  bottom: 0px;
+  right: 5px;
+  position: absolute;
+}
+
 /*------Media Queries------*/
 
 @media screen and (max-width: 900px) {
@@ -80,6 +89,9 @@ html, body {
     font-size: 450%;
   }
   .Button {
+    font-size: 90%;
+  }
+  h3 {
     font-size: 90%;
   }
 }
@@ -94,6 +106,9 @@ html, body {
   .Button {
     font-size: 80%;
   }
+  h3 {
+    font-size: 80%;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -105,5 +120,8 @@ html, body {
   }
   .Button {
     font-size: 80%;
+  }
+  h3 {
+    font-size: 70%;
   }
 }

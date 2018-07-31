@@ -48,6 +48,12 @@
 		font-family: Oxygen;
 	}
 
+	#inputFile3 {
+		padding-left: 1vh;
+		color: white;
+		font-family: Oxygen;
+	}
+
 	#contactInput {
 		padding-top: 1vh;
 	}
@@ -75,8 +81,8 @@
 	.playBtn {
 		top: 2vh;
 		left: 2vh;
-		height: 50px;
-		width: 50px;
+		height: 40px;
+		width: 40px;
 		background-image: url('Images/playbutton.png');
 		background-repeat: no-repeat;
 		background-size: 100%;
@@ -86,8 +92,8 @@
 
 	.playBtn:hover {
 		background-image: url('Images/playbuttonblue.png');
-		height: 50px;
-		width: 50px;
+		height: 40px;
+		width: 40px;
 		background-repeat: no-repeat;
 		background-size: 100%;
 		border: 0;
@@ -95,8 +101,8 @@
 	}
 
 	.animationBtnPause {
-		height: 50px;
-		width: 50px;
+		height: 40px;
+		width: 40px;
 		background-image: url('Images/pausebutton.png');
 		background-repeat: no-repeat;
 		background-size: 100%;
@@ -105,8 +111,8 @@
 	}
 
 	.animationBtnPause:hover {
-		height: 50px;
-		width: 50px;
+		height: 40px;
+		width: 40px;
 		background-image: url('Images/pausebuttonblue.png');
 		background-repeat: no-repeat;
 		background-size: 100%;
@@ -114,10 +120,97 @@
 		background-color: Transparent;
 	}
 
-	#backbtn {
-		position: fixed;
+	.dropdown {
+		display: inline-block;
+	}
+
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
+
+	.menuBtn {
+		position: absolute;
+		top: 0;
+		right: 0;
 		height: 50px;
 		width: 50px;
+		background-image: url('Images/menubutton.png');
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border: 0;
+		background-color: Transparent;
+	}
+
+	.menuBtn:hover {
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 50px;
+		width: 50px;
+		background-image: url('Images/menubuttonblue.png');
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border: 0;
+		background-color: Transparent;
+
+	}
+
+	.dropdown-content {
+		top: 4vh;
+		right: 1vh;
+		display: none;
+		position: absolute;
+		background-color: transparent;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	}
+
+	.dropdown-content button {
+		width: 100%;
+		height: 4vh;
+		color: white;
+		background-color: rgb(60, 60, 60, 0.2);
+		text-decoration: none;
+		font-family: Oxygen;
+		display: block;
+	}
+
+	.dropdown-content button:hover {
+		background-color: rgb(9, 80, 124, 0.5);
+	}
+
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgb(0, 0, 0);
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+
+	.modal-content {
+		vertical-align: top;
+		text-align: center;
+		justify-content: center;
+		background-color: rgb(60, 60, 60, 0.6);
+		margin: 15% auto;
+		border: 1px solid #888;
+		width: 30%;
+		height: 60%;
+	}
+
+	.modal-content h1 {
+		color:white;
+		font-family: Oxygen;
+	}
+
+	#backbtn {
+		position: fixed;
+		height: 40px;
+		width: 40px;
 		background-image: url('Images/backbutton.png');
 		background-repeat: no-repeat;
 		background-size: 100%;
@@ -129,8 +222,8 @@
 
 	#backbtn:hover {
 		background-image: url('Images/bluebackbutton.png');
-		height: 50px;
-		width: 50px;
+		height: 40px;
+		width: 40px;
 		background-repeat: no-repeat;
 		background-size: 100%;
 		border: 0;
@@ -208,6 +301,14 @@
 
 <body>
 	<section id="container">
+		<div id="layoutModal" class="modal">
+			<div class="modal-content" id="modalcontent">
+				<h1> Choose Layout <h1>
+				<button id="closebutton">close</button>
+				<button></button>
+			</div>
+		</div>
+		<div id="attributesModal" class="modal"></div>
 		<div class="loader"></div>
 		<!--left-->
 		<div id="left">
@@ -217,6 +318,9 @@
 				</div>
 				<div id="inputFile2">Select a transmission network file:
 					<input type="file" id="transmissionInput">
+				</div>
+				<div id="inputFile3">Select a contact partition file:
+					<input type="file" id="communitiesInput">
 				</div>
 				<button type="button" id="animationBtn" class="playBtn"></button>
 			</div>
@@ -230,16 +334,23 @@
 		<div id="right" class="rightinitial">
 			<div class="topright">
 				<div id="nodeInfo">
+					<div id="dropdown" class="dropdown">
+						<button type="button" id="menuBtn" class="menuBtn"></button>
+						<div class="dropdown-content">
+							<button type="button" id = "layoutbutton">Layouts</button>
+							<button type="button" id = "toggleAtrbButton">Toggle Attributes</button>
+						</div>
+					</div>
 					<h1 id="nodeName"></h1>
-					<ul id="attributes"></ul>
-				</div>
+				<ul id="attributes"></ul>
 			</div>
-			<div class="middleright" id="cureddiv">
-				<canvas id="curedGraph"></canvas>
-			</div>
-			<div class="bottomright" id="infectdiv">
-				<canvas id="infectGraph"></canvas>
-			</div>
+		</div>
+		<div class="middleright" id="cureddiv">
+			<canvas id="curedGraph"></canvas>
+		</div>
+		<div class="bottomright" id="infectdiv">
+			<canvas id="infectGraph"></canvas>
+		</div>
 		</div>
 	</section>
 
