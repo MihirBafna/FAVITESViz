@@ -45,6 +45,7 @@ var animDuration = 0;
 var nodeAttributes = null;
 var transmitDictionary = {};
 var nodeInfoDictionary = {};
+let layoutType;
 
 
 // Cytoscape initializing empty main contact/transmission graph //
@@ -132,15 +133,10 @@ window.onload = function() {
   });
   var layoutButton = $('#layoutbutton');
   var playbutton = $('#animationBtn');
-  var closebutton = $('#closebutton');
-  layoutButton.click(function(){
-    if (transmitDone == true){
+  layoutButton.click(function() {
+    if (transmitDone == true) {
       $('#layoutModal').fadeIn(300);
-    }
-  });
-  closebutton.click(function(){
-    if (transmitDone == true){
-      $('#layoutModal').fadeOut(300);
+      toggleLayouts();
     }
   });
   playbutton.click(function() {
@@ -208,6 +204,7 @@ function contacttransmitGraph() {
           }
         }
         // Cytoscape Layout function //
+        layoutType = 'cose-bilkent';
         cy.layout({
           name: 'cose-bilkent',
           fit: true,
@@ -693,5 +690,46 @@ function toggleAnimation() {
         console.log('The edge with ID ' + transmitArray[0] + transmitArray[1] + ' or ' + transmitArray[1] + transmitArray[0] + ' does not exist.');
       }
     }
+  }
+}
+
+function toggleLayouts() {
+  var closebutton = $('#closebutton');
+  var checkbutton = $('#checkbutton');
+  var cosebilkBtn = $('#cosebilkent');
+  var breadthBtn = $('#breadthfirst');
+  var circleBtn = $('#circle');
+  if (transmitDone == true) {
+    closebutton.click(function() {
+      if (transmitDone == true) {
+        $('#layoutModal').fadeOut(300);
+      }
+    });
+    checkbutton.click(function() {
+      $('#layoutModal').fadeOut(300);
+    });
+    cosebilkBtn.click(function() {
+      layoutType = 'cose-bilkent'
+      cy.layout({
+        name: layoutType,
+        fit: true,
+        nodeRepulsion: 1000000000,
+        avoidOverlap: true
+      }).run();
+    });
+    breadthBtn.click(function() {
+      layoutType = 'breadthfirst'
+      cy.layout({
+        name: layoutType,
+        fit: true,
+      }).run();
+    });
+    circleBtn.click(function() {
+      layoutType = 'circle'
+      cy.layout({
+        name: layoutType,
+        fit: true,
+      }).run();
+    });
   }
 }

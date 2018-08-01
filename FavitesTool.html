@@ -80,7 +80,7 @@
 
 	.playBtn {
 		top: 2vh;
-		left: 2vh;
+		left: 5vh;
 		height: 40px;
 		width: 40px;
 		background-image: url('Images/playbutton.png');
@@ -134,12 +134,11 @@
 	}
 
 	.dropdown-content {
-		top: 4vh;
+		top: 6vh;
 		right: 1vh;
 		display: none;
 		position: absolute;
 		background-color: transparent;
-		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 	}
 
 	.dropdown-content button {
@@ -171,15 +170,15 @@
 	}
 
 	.modal-content {
-		position:relative;
+		position: relative;
 		text-align: center;
 		justify-content: center;
 		background-color: rgb(60, 60, 60, 0.8);
 		margin: auto;
-		margin-top: 20px;
+		margin-top: 8%;
 		border: 1px solid #888;
 		color: white;
-		font-size: 1.0em;
+		font-size: 0.7em;
 		font-family: Oxygen;
 		width: 30%;
 		height: 60%;
@@ -187,8 +186,8 @@
 
 	#closebutton {
 		position: absolute;
-		bottom:10px;
-		left:10px;
+		bottom: 10px;
+		left: 10px;
 		height: 40px;
 		width: 40px;
 		background-image: url('Images/cancelbutton.png');
@@ -202,14 +201,53 @@
 		background-image: url('Images/cancelbuttonblue.png');
 	}
 
+	.layoutbuttons{
+		padding-top: 5%;
+		justify-content: center;
+	}
+
+	.layoutBtn{
+		margin: auto;
+		font-family: 'Oxygen';
+		color: #FFFFFF;
+		background: transparent;
+		text-transform: uppercase;
+		text-decoration: none;
+		border: solid #FFFFFF;
+		padding: 7px 10px;
+		border-radius: 9px;
+	}
+
+	.layoutBtn:hover {
+	  color: #3A6168;
+	  border: solid #3A6168;
+	}
+
+	#checkbutton {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		height: 40px;
+		width: 40px;
+		background-image: url('Images/checkbutton.png');
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border: 0;
+		background-color: Transparent;
+	}
+
+	#checkbutton:hover {
+		background-image: url('Images/checkbuttonblue.png');
+	}
+
 	#layoutselect {
 		text-decoration: underline;
 	}
 
 	#backbtn {
 		position: fixed;
-		height: 40px;
-		width: 40px;
+		height: 50px;
+		width: 50px;
 		background-image: url('Images/backbutton.png');
 		background-repeat: no-repeat;
 		background-size: 100%;
@@ -295,8 +333,13 @@
 		<div id="layoutModal" class="modal">
 			<div class="modal-content" id="modalcontent">
 				<h1 id="layoutselect"> Layout Selection: <h1>
+				<div class="layoutbuttons">
+					<button class="layoutBtn" id="cosebilkent">coSE-bilkent</button>
+					<button class="layoutBtn" id="breadthfirst">breadthfirst</button>
+					<button class="layoutBtn" id="circle">circle</button>
+				</div>
 				<button id="closebutton"></button>
-				<button></button>
+				<button id="checkbutton"></button>
 			</div>
 		</div>
 		<div id="attributesModal" class="modal"></div>
