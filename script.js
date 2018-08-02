@@ -6,6 +6,7 @@ FAVITESViz was built mainly using the Cytoscape.js Library, as well as other
 dependencies credited below.
 
 Dependencies:
+loaders.css - Connor Atherton
 chart.js
 cytoscape-qtip extension
 cytoscape-coSE-bilkent extension for layouts:
@@ -17,6 +18,7 @@ U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir,
 /*------------------------ Initializing variables ----------------------------*/
 
 // hiding elements upon initialization //
+$("#loaderCircle").hide(0);
 $('#backbtn').hide(0);
 $('#animationBtn').hide(0);
 $('#right').toggleClass('rightcolored', false);
@@ -162,6 +164,7 @@ function contacttransmitGraph() {
   var communitiesInput = document.getElementById('communitiesInput');
   // Contact Network file reading and displaying //
   contactInput.addEventListener('change', function(e) {
+    $('#loaderCircle').show(0);
     var file = contactInput.files[0];
     var textType = /text.*/;
     if (file.type.match(textType)) {
@@ -211,6 +214,9 @@ function contacttransmitGraph() {
           nodeRepulsion: 1000000000,
           avoidOverlap: true
         }).run();
+        if(i>=contactLines.length){
+          $('#loaderCircle').hide(0);
+        }
       }
       reader.readAsText(file);
     }

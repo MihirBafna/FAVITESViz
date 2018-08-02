@@ -10,6 +10,8 @@ FAVITESViz is a tool for visualizing the output of FAVITES
 FAVITESViz was built mainly using the Cytoscape.js Library, as well as other
 dependencies credited below.
 
+- loaders.css 
+
 - chart.js
 
 - cytoscape-qtip extension

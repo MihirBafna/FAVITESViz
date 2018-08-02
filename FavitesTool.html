@@ -7,13 +7,16 @@
 	<!-- CDN version of jQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<!-- qTip extension to cytoscape-->
-	<link type="text/css" rel="stylesheet" href="websitereference/js/jquery.qtip.min.css" />
+	<link type="text/css" rel="stylesheet" href="websitereference/css/jquery.qtip.min.css" />
 	<script src="websitereference/js/cytoscape-qtip.js"></script>
 	<script src='websitereference/js/jquery.qtip.min.js'></script>
 	<!-- Chart.js -->
 	<script src="websitereference/js/Chart.min.js"></script>
 	<!-- coSE-Bilkent Layout reference -->
 	<script src='websitereference/js/cytoscape-cose-bilkent.js'></script>
+	<!-- loaders.css -->
+	<link rel="stylesheet" type="text/css" href="websitereference/css/loaders.min.css"></link>
+	<script src='websitereference/js/loaders.css.js'></script>
 	<!-- extra website metadata -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -201,12 +204,12 @@
 		background-image: url('Images/cancelbuttonblue.png');
 	}
 
-	.layoutbuttons{
+	.layoutbuttons {
 		padding-top: 5%;
 		justify-content: center;
 	}
 
-	.layoutBtn{
+	.layoutBtn {
 		margin: auto;
 		font-family: 'Oxygen';
 		color: #FFFFFF;
@@ -219,8 +222,8 @@
 	}
 
 	.layoutBtn:hover {
-	  color: #3A6168;
-	  border: solid #3A6168;
+		color: #3A6168;
+		border: solid #3A6168;
 	}
 
 	#checkbutton {
@@ -325,11 +328,27 @@
 		position: relative;
 		height: 30%;
 	}
+
+	.loader {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+	}
 </style>
 
 
 <body>
 	<section id="container">
+		<!-- loader from loaders.css -->
+		<div id="loaderCircle">
+			<div class="loader">
+				<div class="ball-clip-rotate-multiple">
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+		</div>
+		<!-- Modals for layout and attributes selection -->
 		<div id="layoutModal" class="modal">
 			<div class="modal-content" id="modalcontent">
 				<h1 id="layoutselect"> Layout Selection: <h1>
@@ -343,7 +362,6 @@
 			</div>
 		</div>
 		<div id="attributesModal" class="modal"></div>
-		<div class="loader"></div>
 		<!--left-->
 		<div id="left">
 			<div id="inputlayout">
