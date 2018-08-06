@@ -214,7 +214,7 @@ function contacttransmitGraph() {
           nodeRepulsion: 1000000000,
           avoidOverlap: true
         }).run();
-        if(i>=contactLines.length){
+        if (i >= contactLines.length) {
           $('#loaderCircle').hide(0);
         }
       }
@@ -655,14 +655,17 @@ function redoNetwork() {
 function toggleAnimation() {
   if (transmitDone == true) {
     if (playtransmission == true) {
-      Chart.defaults.global.animation.duration = counter * 750;
+      overalldelay = counter * 750;
+      Chart.defaults.global.animation.duration = overalldelay;
     } else if (playtransmission == false) {
+      overalldelay = 500;
       Chart.defaults.global.animation.duration = 500;
     }
     hideCharts();
     showMainCharts();
     redoNetwork();
-    for (var key in transmitDictionary) {
+    var key = null;
+    for (key in transmitDictionary) {
       transmitArray = transmitDictionary[key];
       transmissionDelay = Math.ceil(transmitArray[2] * 750);
       // checking for initial infected nodes //
