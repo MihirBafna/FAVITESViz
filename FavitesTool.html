@@ -185,6 +185,7 @@
 		font-family: Oxygen;
 		width: 30%;
 		height: 60%;
+		overflow: auto;
 	}
 
 	#closebutton {
@@ -209,7 +210,13 @@
 		justify-content: center;
 	}
 
+	.layoutbuttons .layoutBtn {
+		margin-bottom: 10px;
+	}
+
 	.layoutBtn {
+		position: relative;
+		display: block;
 		margin: auto;
 		font-family: 'Oxygen';
 		color: #FFFFFF;
@@ -218,12 +225,44 @@
 		text-decoration: none;
 		border: solid #FFFFFF;
 		padding: 7px 10px;
+		width: 100px;
+		font-size: 0.7em;
 		border-radius: 9px;
 	}
 
+	.layoutBtn .tooltip {
+		visibility: hidden;
+		width: 120px;
+		background-color: rgb(58, 97, 104, 0.7);
+		color: #fff;
+		text-align: center;
+		padding: 5px 0;
+		border-radius: 6px;
+		position: absolute;
+		top: -7px;
+		left: 110%;
+	}
+
 	.layoutBtn:hover {
+		cursor: pointer;
 		color: #3A6168;
 		border: solid #3A6168;
+	}
+
+
+	.layoutBtn:hover .tooltip {
+		visibility: visible;
+	}
+
+	.layoutBtn .tooltip::after {
+		content: " ";
+		position: absolute;
+		top: 50%;
+		right: 100%;
+		margin-top: -5px;
+		border-width: 5px;
+		border-style: solid;
+		border-color:transparent rgb(58, 97, 104, 0.7) transparent transparent ;
 	}
 
 	#checkbutton {
@@ -353,9 +392,16 @@
 			<div class="modal-content" id="modalcontent">
 				<h1 id="layoutselect"> Layout Selection: <h1>
 				<div class="layoutbuttons">
-					<button class="layoutBtn" id="cosebilkent">coSE-bilkent</button>
-					<button class="layoutBtn" id="breadthfirst">breadthfirst</button>
-					<button class="layoutBtn" id="circle">circle</button>
+					<div class="layoutBtn" id="cosebilkent">coSE-bilkent</div>
+					<div class="layoutBtn" id="breadthfirst">breadthfirst</div>
+					<div class="layoutBtn" id="circle">circle</div>
+					<div class="layoutBtn" id="grid">grid</div>
+					<div class="layoutBtn" id="EWSE">EWSE
+						<div class="tooltip" id="tooltip1">Edge-weighted Spring-Embedded</div>
+					</div>
+					<div class="layoutBtn" id="PFD">PFD
+						<div class="tooltip" id="tooltip2">Prefuse Force Directed</div>
+					</div>
 				</div>
 				<button id="closebutton"></button>
 				<button id="checkbutton"></button>

@@ -708,6 +708,7 @@ function toggleLayouts() {
   var cosebilkBtn = $('#cosebilkent');
   var breadthBtn = $('#breadthfirst');
   var circleBtn = $('#circle');
+  var gridBtn = $('#grid');
   if (transmitDone == true) {
     closebutton.click(function() {
       if (transmitDone == true) {
@@ -735,6 +736,13 @@ function toggleLayouts() {
     });
     circleBtn.click(function() {
       layoutType = 'circle'
+      cy.layout({
+        name: layoutType,
+        fit: true,
+      }).run();
+    });
+    gridBtn.click(function() {
+      layoutType = 'grid'
       cy.layout({
         name: layoutType,
         fit: true,
